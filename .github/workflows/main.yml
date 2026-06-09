@@ -15,14 +15,24 @@ jobs:
         with:
           python-version: "3.11"
 
-      - name: Install Java
+      - name: Install Java and Dependencies
         run: |
           sudo apt update
-          sudo apt install -y openjdk-17-jdk zip unzip
+          sudo apt install -y openjdk-17-jdk zip unzip libncurses5 libstdc++6
 
       - name: Install Buildozer
         run: |
           pip install buildozer cython
+
+      - name: Auto-Fix Buildozer Spec File
+        run: |
+          # যদি ফাইলের প্রথম লাইনে ওই ভুল লেখাটা থাকে, তবে তা কেটে শুধু [app] বসিয়ে দেবে
+          if grep -q "\[Name: Build APK" buildozer.spec; then
+            echo "Fixing buildozer.spec file header..."
+            sed -i 's/\[Name: Build APK.*/\[app\]/' buildozer.spec
+          fi
+          # যদি কোনো কারণে তাও কাজ না করে, একদম প্রথম লাইনে নিখুঁতভাবে [app] নিশ্চিত করার ব্যাকআপ কমান্ড
+          sed -i '1s/.*/\[app\]/' buildozer.spec
 
       - name: Build APK
         run: |
