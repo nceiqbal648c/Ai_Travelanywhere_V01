@@ -25,11 +25,18 @@ jobs:
           pip install --upgrade pip
           pip install buildozer cython
 
+      - name: Automatically Accept Android Licenses
+        run: |
+          # গুগলের লাইসেন্স অটোমেটিক 'yes' করার লাইন
+          mkdir -p ~/.android
+          touch ~/.android/repositories.cfg
+          yes | buildozer android debug --only-compile-deps || true
+
       - name: Build APK with app.py as Entrypoint
         run: |
-          # বিল্ডোজার রান করার আগে app.py কে মেইন এন্ট্রি হিসেবে সার্ভারে কনফিগার করা হলো
           export P4A_android_entrypoint=app.py
-          buildozer android debug
+          # এবার লাইসেন্স ঝামেলা ছাড়াই পিওর বিল্ড হবে
+          yes | buildozer android debug
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
