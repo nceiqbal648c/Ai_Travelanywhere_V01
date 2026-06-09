@@ -25,31 +25,10 @@ jobs:
           pip install --upgrade pip
           pip install buildozer cython
 
-      - name: Fix Buildozer Entrypoint and Spec Header
-        run: |
-          python -c "
-          import os
-          filename = 'buildozer.spec'
-          if os.path.exists(filename):
-              with open(filename, 'r', encoding='utf-8') as f:
-                  content = f.read()
-              
-              # প্রথম লাইনের সমস্যা ঠিক করা হচ্ছে
-              lines = content.splitlines()
-              lines[0] = '[app]'
-              fixed_content = '\n'.join(lines)
-              
-              # বিল্ডোজারকে বলে দেওয়া হচ্ছে মেইন ফাইল app.py এবং আইকন নির্দিষ্ট করা হচ্ছে
-              fixed_content = fixed_content.replace('source.include_exts = py,png,jpg,kv,atlas', 'source.include_exts = py,png,jpg,kv,atlas,html,txt')
-              
-              with open(filename, 'w', encoding='utf-8') as f:
-                  f.write(fixed_content)
-              print('buildozer.spec successfully optimized for app.py!')
-          "
-
       - name: Build APK with app.py as Entrypoint
         run: |
-          # বিল্ডোজারকে জোরপূর্বক app.py ফাইলকে মেইন ধরে রান করানো হচ্ছে
+          # বিল্ডোজার রান করার আগে app.py কে মেইন এন্ট্রি হিসেবে সার্ভারে কনফিগার করা হলো
+          export P4A_android_entrypoint=app.py
           buildozer android debug
 
       - name: Upload APK
