@@ -1,23 +1,38 @@
-[app]
-title = AI Travel Anywhere
-package.name = aitravelanywhere
-package.domain = org.ia
-source.dir = .
-source.include_exts = py,png,jpg,jpeg,html,css,js
-version = 0.0.7
+[Name: Build APK
 
-# প্রয়োজনীয় রিকোয়ারমেন্টস (যা যা লাইব্রেরি লাগবে)
-requirements = python3,flask,yt-dlp,requests,jinja2,werkzeug,itsdangerous,click
+on:
+  workflow_dispatch:
 
-orientation = portrait
-fullscreen = 1
+jobs:
+  build:
+    runs-on: ubuntu-latest
 
-# অ্যান্ড্রয়েড স্পেসিফিক পারমিশন (যাতে ফাইল ফোনে সেভ হতে পারে)
-android.permissions = INTERNET, WRITE_EXTERNAL_STORAGE, READ_EXTERNAL_STORAGE
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
 
-# অ্যান্ড্রয়েড আর্কিটেকচার সেটআপ
-android.archs = arm64-v8a
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
 
-[buildozer]
-log_level = 2
-warn_on_root = 1
+      - name: Install Java and System Dependencies
+        run: |
+          sudo apt update
+          sudo apt install -y openjdk-17-jdk zip unzip autoconf libtool pkg-config zlib1g-dev libncurses5-dev libssl-dev libffi-dev libgdbm-dev libsqlite3-dev uuid-dev togl tk-dev library-utils libgstreamer1.0-dev glib-2.0-dev libcairo2-dev libpango1.0-dev libgdk-pixbuf2.0-dev libgl1-mesa-dev libgles2-mesa-dev libgstreamer-plugins-base1.0-dev lld
+
+      - name: Install Buildozer and Cython
+        run: |
+          pip install --upgrade pip
+          pip install buildozer cython setuptools
+
+      - name: Build APK with Buildozer
+        run: |
+          # The yes command automatically accepts the Android SDK/NDK licenses
+          yes | buildozer android debug
+
+      - name: Upload APK Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: AI_Travel_Anywhere_APK
+          path: .buildozer/android/platform/build-armeabi-v7a_arm64-v8a/dists/*/build/outputs/apk/debug/*.apk
