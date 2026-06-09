@@ -17,22 +17,25 @@ jobs:
 
       - name: Install Java and Dependencies
         run: |
-          sudo apt update
-          sudo apt install -y openjdk-17-jdk zip unzip libncurses5 libstdc++6
+          sudo apt-get update
+          sudo apt-get install -y openjdk-17-jdk zip unzip libncurses6 libstdc++6
+          # অতিরিক্ত ডিপেন্ডেন্সি যা বিল্ডোজার ব্যাকএন্ডের জন্য প্রয়োজন হতে পারে
+          sudo apt-get install -y build-essential ccache git libffi-dev libssl-dev
 
       - name: Install Buildozer
         run: |
+          pip install --upgrade pip
           pip install buildozer cython
 
       - name: Auto-Fix Buildozer Spec File
         run: |
-          # যদি ফাইলের প্রথম লাইনে ওই ভুল লেখাটা থাকে, তবে তা কেটে শুধু [app] বসিয়ে দেবে
-          if grep -q "\[Name: Build APK" buildozer.spec; then
+          if [ -f buildozer.spec ]; then
             echo "Fixing buildozer.spec file header..."
-            sed -i 's/\[Name: Build APK.*/\[app\]/' buildozer.spec
+            sed -i '1s/.*/\[app\]/' buildozer.spec
+          else
+            echo "buildozer.spec not found, creating a default one..."
+            buildozer init
           fi
-          # যদি কোনো কারণে তাও কাজ না করে, একদম প্রথম লাইনে নিখুঁতভাবে [app] নিশ্চিত করার ব্যাকআপ কমান্ড
-          sed -i '1s/.*/\[app\]/' buildozer.spec
 
       - name: Build APK
         run: |
