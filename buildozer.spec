@@ -1,38 +1,33 @@
-[Name: Build APK
+[app]
 
-on:
-  workflow_dispatch:
+# অ্যাপের নাম এবং প্যাকেজ ডিটেইলস
+title = AI Travel Anywhere
+package.name = aitravelanywhere
+package.domain = org.ia
+source.dir = .
+source.include_exts = py,png,jpg,jpeg,html,css,js,json
+version = 0.0.7
 
-jobs:
-  build:
-    runs-on: ubuntu-latest
+# 🌟 আইকন সেটআপ (আপনার প্রজেক্ট ফোল্ডারে icon.png নামের একটি ছবি থাকতে হবে)
+icon.filename = %(source.dir)s/icon.png
 
-    steps:
-      - name: Checkout Code
-        uses: actions/checkout@v4
+# 🌟 প্রয়োজনীয় রিকোয়ারমেন্টস (এখানে kivy এবং android যুক্ত করা হয়েছে)
+requirements = python3,kivy,flask,yt-dlp,requests,jinja2,werkzeug,itsdangerous,click,android
 
-      - name: Setup Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: "3.11"
+orientation = portrait
+fullscreen = 1
 
-      - name: Install Java and System Dependencies
-        run: |
-          sudo apt update
-          sudo apt install -y openjdk-17-jdk zip unzip autoconf libtool pkg-config zlib1g-dev libncurses5-dev libssl-dev libffi-dev libgdbm-dev libsqlite3-dev uuid-dev togl tk-dev library-utils libgstreamer1.0-dev glib-2.0-dev libcairo2-dev libpango1.0-dev libgdk-pixbuf2.0-dev libgl1-mesa-dev libgles2-mesa-dev libgstreamer-plugins-base1.0-dev lld
+# অ্যান্ড্রয়েড পারমিশনস
+android.permissions = INTERNET, WRITE_EXTERNAL_STORAGE, READ_EXTERNAL_STORAGE
 
-      - name: Install Buildozer and Cython
-        run: |
-          pip install --upgrade pip
-          pip install buildozer cython setuptools
+# 🌟 অ্যান্ড্রয়েড এপিআই লেভেল (গিটহাব বিল্ডের জন্য এটি ফিক্সড করা জরুরি)
+android.api = 33
+android.minapi = 21
+android.ndk = 25b
 
-      - name: Build APK with Buildozer
-        run: |
-          # The yes command automatically accepts the Android SDK/NDK licenses
-          yes | buildozer android debug
+# অ্যান্ড্রয়েড আর্কিটেকচার সেটআপ (arm64 এর পাশাপাশি armeabi ও দেওয়া ভালো সব ফোনের জন্য)
+android.archs = arm64-v8a, armeabi-v7a
 
-      - name: Upload APK Artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: AI_Travel_Anywhere_APK
-          path: .buildozer/android/platform/build-armeabi-v7a_arm64-v8a/dists/*/build/outputs/apk/debug/*.apk
+[buildozer]
+log_level = 2
+warn_on_root = 1
