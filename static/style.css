@@ -1,0 +1,153 @@
+:root {
+    --card-bg: rgba(15, 23, 42, 0.65);
+    --accent-color: #38bdf8;
+    --text-main: #f8fafc;
+    --text-muted: #cbd5e1;
+    --success: #4ade80;
+}
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+body {
+    background-color: #0f172a;
+    color: var(--text-main);
+    padding: 15px;
+    display: flex;
+    justify-content: center;
+    min-height: 100vh;
+    position: relative;
+    overflow-x: hidden;
+}
+.bg-blur-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: url('https://i.ibb.co/6R0D9Bw/1000059341.png'), url('/static/1000059341.png');
+    background-size: cover;
+    background-position: center;
+    filter: brightness(0.3) blur(1px);
+    z-index: -1;
+}
+.app-container {
+    width: 100%;
+    max-width: 480px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+.app-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 15px;
+    background: rgba(15, 23, 42, 0.7);
+    backdrop-filter: blur(10px);
+    border-radius: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+.logo-area h1 {
+    font-size: 15px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+}
+.status-badge {
+    background: rgba(74, 222, 128, 0.15);
+    color: var(--success);
+    padding: 5px 12px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+.status-badge .dot {
+    width: 8px;
+    height: 8px;
+    background-color: var(--success);
+    border-radius: 50%;
+    box-shadow: 0 0 8px var(--success);
+}
+.profile-card {
+    background: var(--card-bg);
+    backdrop-filter: blur(15px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    padding: 24px;
+    border-radius: 20px;
+    text-align: center;
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+    margin-top: 10px;
+}
+.profile-info h2 {
+    font-size: 22px;
+    font-weight: 800;
+    letter-spacing: 0.5px;
+    color: #fff;
+    margin-bottom: 4px;
+}
+.profile-info .tagline {
+    font-size: 13px;
+    color: var(--accent-color);
+    font-weight: 500;
+}
+.divider {
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    margin: 15px 0;
+}
+.bio {
+    font-size: 11px;
+    color: var(--text-muted);
+    font-style: italic;
+    letter-spacing: 0.5px;
+}
+.content-section {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+.content-section h3 {
+    font-size: 14px;
+    color: var(--text-muted);
+    font-weight: 600;
+    padding-left: 5px;
+}
+.file-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+.file-card {
+    background: var(--card-bg);
+    backdrop-filter: blur(15px);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    padding: 16px;
+    border-radius: 16px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+}
+.file-icon {
+    font-size: 20px;
+    color: var(--accent-color);
+    background: rgba(56, 189, 248, 0.15);
+    width: 42px;
+    height: 42px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 12px;
+}
+.file-info h4 {
+    font-size: 15px;
+    font-weight: 600;
+}
+.file-info p {
+    font-size: 12px;
+    color: var(--text-muted);
+}

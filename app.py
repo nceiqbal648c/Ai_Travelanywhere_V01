@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, send_file
+from flask import Flask, render_template, request, jsonify, send_file
 import yt_dlp
 import os
 
@@ -9,16 +9,17 @@ if not os.path.exists(DOWNLOAD_FOLDER):
 
 @app.route('/')
 def index():
-    return render_template('index.html')
+    return render_template('imdex.html')
 
 @app.route('/download', methods=['POST'])
 def download():
-    url = request.form.get('url')
-    dl_type = request.form.get('type', 'video')
-    
+    data = request.get_json() or {}
+    url = data.get('url')
+    dl_type = data.get('type', 'video')
+
     if not url:
-        return "লিংক দেওয়া হয়নি!", 400
-        
+        return jsonify({"message": "লিংক দেওয়া হয়নি!"}), 400
+
     try:
         if dl_type == 'audio':
             ydl_opts = {
@@ -36,7 +37,7 @@ def download():
                 'outtmpl': os.path.join(DOWNLOAD_FOLDER, '%(title)s.%(ext)s'),
                 'merge_output_format': 'mp4',
             }
-        
+
         with yt_dlp.YoutubeDL(ydl_opts) as ydl:
             info = ydl.extract_info(url, download=True)
             filename = ydl.prepare_filename(info)
@@ -46,9 +47,10 @@ def download():
                 filename = os.path.splitext(filename)[0] + '.mp4'
 
         return send_file(filename, as_attachment=True)
-        
+
     except Exception as e:
-        return f"ডাউনলোড ব্যর্থ হয়েছে: {str(e)}", 500
+        return jsonify({"message": f"ডাউনলোড ব্যর্থ হয়েছে: {str(e)}"}), 500
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000, debug=True)
+
