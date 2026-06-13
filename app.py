@@ -3,13 +3,13 @@ import yt_dlp
 import os
 
 app = Flask(__name__)
-DOWNLOAD_FOLDER = 'downloads'
+DOWNLOAD_FOLDER = '/storage/emulated/0/Download'
 if not os.path.exists(DOWNLOAD_FOLDER):
     os.makedirs(DOWNLOAD_FOLDER)
 
 @app.route('/')
 def index():
-    return render_template('imdex.html')
+    return render_template('index.html')
 
 @app.route('/download', methods=['POST'])
 def download():
