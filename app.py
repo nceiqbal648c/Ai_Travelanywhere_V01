@@ -3,9 +3,8 @@ import yt_dlp
 import os
 
 app = Flask(__name__)
-DOWNLOAD_FOLDER = '/storage/emulated/0/Download'
-if not os.path.exists(DOWNLOAD_FOLDER):
-    os.makedirs(DOWNLOAD_FOLDER)
+DOWNLOAD_FOLDER = 'downloads'
+os.makedirs(DOWNLOAD_FOLDER, exist_ok=True)
 
 @app.route('/')
 def index():
