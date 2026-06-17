@@ -3,7 +3,7 @@ import yt_dlp
 import os
 
 app = Flask(__name__)
-DOWNLOAD_FOLDER = '/data/data/com.termux/files/home/storage/downloads'
+DOWNLOAD_FOLDER = 'downloads'
 os.makedirs(DOWNLOAD_FOLDER, exist_ok=True)
 
 @app.route('/')
