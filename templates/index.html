@@ -149,18 +149,26 @@
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ url: urlInput, type: type })
-            });
-            if (response.ok) {
+    
+        });
+    if (response.ok) {
+    const blob = await response.blob();
+    const url = window.URL.createObjectURL(blob);
+
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = type === 'audio' ? 'audio.mp3' : 'video.mp4';
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+
+    window.URL.revokeObjectURL(url);
+
     statusCircle.style.animation = 'none';
     statusCircle.style.borderColor = '#34d399';
     statusText.className = "text-xs text-green-400 font-mono text-center";
     statusText.innerHTML = `Success! ${type === 'audio' ? 'Audio' : 'Video'} Downloaded.`;
-} else {
-    statusCircle.style.animation = 'none';
-    statusCircle.style.borderColor = '#f87171';
-    statusText.className = "text-xs text-red-400 font-mono";
-    statusText.innerText = "Download Failed!";
-            }
+}
         } catch (error) {
             statusCircle.style.animation = 'none';
             statusCircle.style.borderColor = '#f87171';
