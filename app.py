@@ -45,6 +45,8 @@ def download():
             elif not filename.endswith('.mp4'):
                 filename = os.path.splitext(filename)[0] + '.mp4'
 
+        print("FILE=", filename)
+        print("EXISTS=", os.path.exists(filename))
         return send_file(filename, as_attachment=True)
 
     except Exception as e:
