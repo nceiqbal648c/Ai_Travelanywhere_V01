@@ -32,11 +32,15 @@ def download():
             }
         else:
             ydl_opts = {
-                'format': '18/best',
+                'format': 'bestvideo+bestaudio/best',
                 'outtmpl': os.path.join(DOWNLOAD_FOLDER, '%(title)s.%(ext)s'),
                 'merge_output_format': 'mp4',
+                'cookiefile': 'cookies/youtube_cookies.txt',
             }
 
+        print("URL =", url)
+        print("TYPE =", dl_type)
+        print("YDL_OPTS =", ydl_opts)
         with yt_dlp.YoutubeDL(ydl_opts) as ydl:
             info = ydl.extract_info(url, download=True)
             filename = ydl.prepare_filename(info)
