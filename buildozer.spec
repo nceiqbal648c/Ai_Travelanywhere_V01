@@ -9,10 +9,10 @@
 title = My Application
 
 # (str) Package name
-package.name = myapp
+package.name = AI_TravelAnywhere
 
 # (str) Package domain (needed for android/ios packaging)
-package.domain = org.test
+package.domain = com.iqbalahmed
 
 # (str) Source code where the main.py live
 source.dir = .
@@ -52,7 +52,7 @@ requirements = python3,kivy
 #presplash.filename = %(source.dir)s/data/presplash.png
 
 # (str) Icon of the application
-#icon.filename = %(source.dir)s/data/icon.png
+icon.filename = icon.png
 
 # (list) Supported orientations
 # Valid options are: landscape, portrait, portrait-reverse, landscape-reverse, or all
