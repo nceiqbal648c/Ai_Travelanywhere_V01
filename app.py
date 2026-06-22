@@ -8,14 +8,13 @@ os.makedirs(DOWNLOAD_FOLDER, exist_ok=True)
 
 @app.route('/')
 def index():
-    return render_template('index.html')
+    return render_template('index_v2.html')
 
 @app.route('/download', methods=['POST'])
 def download():
     data = request.get_json() or {}
     url = data.get('url')
     dl_type = data.get('type', 'video')
-
     if not url:
         return jsonify({"message": "লিংক দেওয়া হয়নি!"}), 400
 
@@ -32,7 +31,7 @@ def download():
             }
         else:
             ydl_opts = {
-                'format': 'bestvideo+bestaudio/best',
+                'format': 'best',
                 'outtmpl': os.path.join(DOWNLOAD_FOLDER, '%(title)s.%(ext)s'),
                 'merge_output_format': 'mp4',
                 'cookiefile': 'cookies/youtube_cookies.txt',
