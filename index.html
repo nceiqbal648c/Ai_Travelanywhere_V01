@@ -28,6 +28,96 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 
 <title>SILENTTRAIL AI</title>
+<style>
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+body{
+    min-height:100vh;
+    background:#040814;
+    font-family:'Segoe UI',sans-serif;
+    color:white;
+    overflow-x:hidden;
+}
+/* Background */
+.bg-layer{
+    position:fixed;
+    inset:0;
+    background:
+    linear-gradient(
+    rgba(4,8,20,.75),
+    rgba(4,8,20,.88)),
+    url('/static/images/1000053178.png');
+    background-size:cover;
+    background-position:center;
+    z-index:-2;
+}
+/* Nano Overlay */
+.nano-overlay{
+    position:fixed;
+    inset:0;
+    background-image:
+    radial-gradient(
+    rgba(0,242,254,.08) 1px,
+    transparent 1px);
+    background-size:25px 25px;
+    z-index:-1;
+}
+/* Main Container */
+.container{
+    width:100%;
+    max-width:480px;
+    margin:auto;
+    padding:30px 20px;
+}
+/* Hero Card */
+.hero-card{
+    backdrop-filter:blur(16px);
+    background:
+    rgba(255,255,255,.05);
+    border:
+    1px solid rgba(255,255,255,.1);
+    border-radius:28px;
+    padding:30px 20px;
+    text-align:center;
+    box-shadow:
+    0 0 30px rgba(0,242,254,.15);
+}
+/* Logo */
+.logo{
+    width:110px;
+    height:110px;
+    margin:auto;
+    border-radius:50%;
+    border:2px solid #00f2fe;
+    overflow:hidden;
+    box-shadow:
+    0 0 25px rgba(0,242,254,.5);
+}
+.logo img{
+    width:100%;
+    height:100%;
+    object-fit:cover;
+}
+/* App Name */
+.app-name{
+    margin-top:18px;
+    color:#00f2fe;
+    font-size:30px;
+    font-weight:700;
+    text-shadow:
+    0 0 15px rgba(0,242,254,.5);
+}
+/* Tagline */
+.tagline{
+    margin-top:8px;
+    color:#b794f4;
+    font-size:13px;
+    letter-spacing:2px;
+}
+</style>
 
 <style>
 
