@@ -1,7 +1,6 @@
 from flask import Flask, render_template, request, jsonify, send_file
 import yt_dlp
 import os
-import shutil
 
 app = Flask(__name__)
 DOWNLOAD_FOLDER = 'downloads'
@@ -35,6 +34,7 @@ def download():
                 'format': 'best',
                 'outtmpl': os.path.join(DOWNLOAD_FOLDER, '%(title)s.%(ext)s'),
                 'merge_output_format': 'mp4',
+                'cookiefile': 'cookies/youtube_cookies.txt',
             }
 
         print("URL =", url)
@@ -50,15 +50,10 @@ def download():
 
         print("FILE=", filename)
         print("EXISTS=", os.path.exists(filename))
-        phone_folder = "/storage/emulated/0/Download/AI_Travel_App"
-        os.makedirs(phone_folder, exist_ok=True)
-        shutil.copy2(filename, os.path.join(phone_folder, os.path.basename(filename)))
         return send_file(filename, as_attachment=True)
 
     except Exception as e:
-        import traceback
-        traceback.print_exc()
-        return jsonify({'message': str(e)}), 500
+        return jsonify({"message": f"ডাউনলোড ব্যর্থ হয়েছে: {str(e)}"}), 500
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000, debug=True)

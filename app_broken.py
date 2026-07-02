@@ -1,0 +1,84 @@
+from flask import Flask, render_template, request, jsonify, send_file
+import yt_dlp
+import os
+import shutil
+app = Flask(__name__)
+
+DOWNLOAD_FOLDER = "downloads"
+os.makedirs(DOWNLOAD_FOLDER, exist_ok=True)
+
+@app.route("/")
+def index():
+    return render_template("index.html")
+
+
+@app.route("/download", methods=["POST"])
+def download():
+
+    data = request.get_json()
+
+    url = data.get("url")
+    dl_type = data.get("type", "video")
+
+    if not url:
+        return jsonify({"message": "No URL"}), 400
+
+    try:
+
+        if dl_type == "audio":
+
+            ydl_opts = {
+                "format": "bestaudio/best",
+                "outtmpl": os.path.join(DOWNLOAD_FOLDER, "%(title)s.%(ext)s"),
+                "postprocessors": [{
+                    "key": "FFmpegExtractAudio",
+                    "preferredcodec": "mp3",
+                    "preferredquality": "192",
+                }],
+            }
+
+        else:
+
+            ydl_opts = {
+                "format": "best",
+                "outtmpl": os.path.join(DOWNLOAD_FOLDER, "%(title)s.%(ext)s"),
+                "merge_output_format": "mp4",
+            }
+
+        with yt_dlp.YoutubeDL(ydl_opts) as ydl:
+
+            info = ydl.extract_info(url, download=True)
+
+            filename = ydl.prepare_filename(info)
+
+            if dl_type == "audio":
+                filename = os.path.splitext(filename)[0] + ".mp3"
+
+            elif not filename.endswith(".mp4"):
+                filename = os.path.splitext(filename)[0] + ".mp4"
+
+        if not os.path.exists(filename):
+            return jsonify({"message": "Downloaded file not found"}), 500
+        phone_folder = "/storage/emulated/0/Download/AI_Travel_App"
+        os.makedirs(phone_folder, exist_ok=True)
+
+        shutil.copy2(
+        filename,
+        os.path.join(phone_folder, os.path.basename(filename))
+        )
+        return send_file(
+            os.path.abspath(filename),
+            as_attachment=True
+        )
+
+        except Exception as e:
+
+        print(e)
+
+        return jsonify({
+            "message": str(e)
+        }), 500
+
+
+        if __name__ == "__main__":
+        app.run(host="0.0.0.0", port=5000, debug=True)

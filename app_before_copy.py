@@ -35,6 +35,7 @@ def download():
                 'format': 'best',
                 'outtmpl': os.path.join(DOWNLOAD_FOLDER, '%(title)s.%(ext)s'),
                 'merge_output_format': 'mp4',
+                'cookiefile': 'cookies/youtube_cookies.txt',
             }
 
         print("URL =", url)
@@ -50,9 +51,6 @@ def download():
 
         print("FILE=", filename)
         print("EXISTS=", os.path.exists(filename))
-        phone_folder = "/storage/emulated/0/Download/AI_Travel_App"
-        os.makedirs(phone_folder, exist_ok=True)
-        shutil.copy2(filename, os.path.join(phone_folder, os.path.basename(filename)))
         return send_file(filename, as_attachment=True)
 
     except Exception as e:
