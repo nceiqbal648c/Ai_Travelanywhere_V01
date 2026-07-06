@@ -3,13 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
     <title>Ai_Travel_Anywhere</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
     <div class="main-container">
         <h1>Ai_Travel_Anywhere</h1>
-        <input type="text" placeholder="Paste link here...">
+        <input type="text" id="url-input" placeholder="Paste link here...">
         <button class="btn-main">DOWNLOAD MEDIA</button>
         <div class="grid-buttons">
             <button>MP4 VIDEO</button>
@@ -17,7 +17,9 @@
             <button>YOUTUBE</button>
             <button>FACEBOOK</button>
             <button>TIKTOK</button>
+            <button>INSTAGRAM</button>
         </div>
+        <p class="footer">Created by : Iqbal Ahmed</p>
     </div>
 </body>
 </html>
