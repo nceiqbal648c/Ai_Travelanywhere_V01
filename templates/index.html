@@ -3,23 +3,112 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ai_Travel_Anywhere</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <title>AI TRAVEL ANYWHERE - Downloader UI</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div class="main-container">
-        <h1>Ai_Travel_Anywhere</h1>
-        <input type="text" id="url-input" placeholder="Paste link here...">
-        <button class="btn-main">DOWNLOAD MEDIA</button>
-        <div class="grid-buttons">
-            <button>MP4 VIDEO</button>
-            <button>MP3 AUDIO</button>
-            <button>YOUTUBE</button>
-            <button>FACEBOOK</button>
-            <button>TIKTOK</button>
-            <button>INSTAGRAM</button>
+
+    <div class="container">
+        <div class="header">
+            <div class="logo-area">
+                <i class="fa-solid fa-earth-americas globe-icon"></i>
+                <h1>ΔI_TRAVEL_ΔNYWHERE</h1>
+            </div>
+            <p class="tagline">Download Anything. Anywhere. Anytime.</p>
         </div>
-        <p class="footer">Created by : Iqbal Ahmed</p>
+
+        <div class="input-card">
+            <div class="input-box">
+                <i class="fa-solid fa-link link-icon"></i>
+                <input type="text" id="videoUrl" placeholder="Paste your link here...">
+                <span class="input-subtitle">YouTube, Facebook Reel or TikTok link</span>
+            </div>
+            <button id="pasteBtn" class="btn-paste"><i class="fa-solid fa-paste"></i> PASTE</button>
+        </div>
+
+        <div class="platform-section">
+            <h3>CHOOSE PLATFORM</h3>
+            <div class="platform-grid">
+                <div class="platform-card active" data-platform="youtube">
+                    <i class="fa-brands fa-youtube icon-yt"></i>
+                    <span class="platform-name">YOUTUBE</span>
+                    <span class="format-badge ext-mp4">MP4</span>
+                </div>
+                <div class="platform-card" data-platform="facebook">
+                    <i class="fa-brands fa-facebook icon-fb"></i>
+                    <span class="platform-name">FACEBOOK REEL</span>
+                    <span class="format-badge ext-mp4">MP4</span>
+                </div>
+                <div class="platform-card" data-platform="tiktok">
+                    <i class="fa-brands fa-tiktok icon-tt"></i>
+                    <span class="platform-name">TIKTOK</span>
+                    <span class="format-badge ext-mp4">MP4</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="action-row">
+            <div class="info-card side-card">
+                <i class="fa-solid fa-rocket icon-rocket"></i>
+                <div class="info-text">
+                    <h4>ULTRA FAST</h4>
+                    <p>High Speed Download</p>
+                </div>
+            </div>
+
+            <div class="start-download-wrapper">
+                <button id="startDownloadBtn" class="circle-download-btn">
+                    <i class="fa-solid fa-download"></i>
+                    <span>START</span>
+                    <span class="sub-span">DOWNLOAD</span>
+                </button>
+            </div>
+
+            <div class="info-card side-card">
+                <i class="fa-solid fa-shield-halved icon-shield"></i>
+                <div class="info-text">
+                    <h4>SAFE & SECURE</h4>
+                    <p>No Data Stored<br>100% Secure</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="status-container" id="statusContainer">
+            <div class="progress-card" id="progressCard">
+                <div class="progress-header">
+                    <span>DOWNLOAD PROGRESS</span>
+                    <span id="speedDisplay"><i class="fa-solid fa-gauge-high"></i> 5.2 MB/s</span>
+                </div>
+                <div class="progress-bar-bg">
+                    <div class="progress-bar-fill" id="progressBarFill" style="width: 75%"></div>
+                </div>
+                <div class="progress-footer">
+                    <span id="statusMessage">Downloading... Please wait</span>
+                    <span id="sizeDisplay">12.4 MB / 16.5 MB</span>
+                </div>
+            </div>
+
+            <div class="success-card" id="successCard">
+                <div class="success-left">
+                    <div class="check-circle">
+                        <i class="fa-solid fa-check"></i>
+                    </div>
+                    <div class="success-text">
+                        <h4>FINISHED DOWNLOADING!</h4>
+                        <p>Your file has been downloaded successfully.</p>
+                    </div>
+                </div>
+                <button class="btn-open-file"><i class="fa-solid fa-folder-open"></i> OPEN FILE</button>
+            </div>
+        </div>
+
+        <div class="footer-credits">
+            <i class="fa-solid fa-circle-user"></i> Created by : <span>Iqbal Ahmed</span>
+        </div>
+
     </div>
+
+    <script src="script.js"></script>
 </body>
 </html>

@@ -1,219 +1,57 @@
-/* ==========================================
-   AI Travel Anywhere v2.0
-   script.js
-   Part 1 / 4
-========================================== */
+document.addEventListener("DOMContentLoaded", function () {
+    const pasteBtn = document.getElementById("pasteBtn");
+    const videoUrlInput = document.getElementById("videoUrl");
+    const platformCards = document.querySelectorAll(".platform-card");
+    const startDownloadBtn = document.getElementById("startDownloadBtn");
+    
+    const progressCard = document.getElementById("progressCard");
+    const successCard = document.getElementById("successCard");
+    const progressBarFill = document.getElementById("progressBarFill");
 
-const urlInput = document.getElementById("video-url");
-const pasteBtn = document.getElementById("paste-btn");
-
-const mp4Btn = document.querySelector(".mp4");
-const mp3Btn = document.querySelector(".mp3");
-
-const progress = document.getElementById("progress");
-const percent = document.getElementById("percent");
-
-const title = document.getElementById("video-title");
-const channel = document.getElementById("channel-name");
-
-const thumbnail = document.getElementById("thumbnail");
-
-/* Paste Button */
-
-pasteBtn.addEventListener("click", async () => {
-
-    try{
-
-        const text = await navigator.clipboard.readText();
-
-        urlInput.value = text;
-
-    }
-
-    catch(error){
-
-        alert("Clipboard access denied.");
-
-    }
-
-});
-/* ==========================================
-   AI Travel Anywhere v2.0
-   script.js
-   Part 2 / 4
-========================================== */
-
-function animateProgress() {
-
-    let value = 0;
-
-    progress.style.width = "0%";
-    percent.innerText = "0%";
-
-    const timer = setInterval(() => {
-
-        value += 2;
-
-        progress.style.width = value + "%";
-        percent.innerText = value + "%";
-
-        if (value >= 100) {
-
-            clearInterval(timer);
-
+    // ১. পেস্ট বাটন ট্রিগার (ক্লিপবোর্ড থেকে লিংক রিড করার কোড)
+    pasteBtn.addEventListener("click", async function () {
+        try {
+            const text = await navigator.clipboard.readText();
+            videoUrlInput.value = text;
+        } catch (err) {
+            alert("Clipboard read permission denied! Paste text manually.");
         }
+    });
 
-    }, 35);
-
-}
-
-/* ==========================================
-   AI Travel Anywhere v2.0
-   script.js
-   Part 3 / 4
-========================================== */
-
-/* Button Events */
-
-mp4Btn.addEventListener("click", () => {
-
-    startDownload("video");
-
-});
-
-mp3Btn.addEventListener("click", () => {
-
-    startDownload("audio");
-
-});
-
-/* Enter Key Support */
-
-urlInput.addEventListener("keydown", (event) => {
-
-    if(event.key==="Enter"){
-
-        startDownload("video");
-
-    }
-
-});
-
-/* Auto Focus */
-
-window.addEventListener("load",()=>{
-
-    urlInput.focus();
-
-});
-
-/* Reset Progress */
-
-function resetProgress(){
-
-    progress.style.width="0%";
-
-    percent.innerText="0%";
-
-}
-/* ==========================================
-   AI Travel Anywhere v2.0
-   script.js
-   Part 4 / 4
-========================================== */
-
-/* Download File */
-
-async function saveFile(response, type){
-
-    const blob = await response.blob();
-
-    const url = window.URL.createObjectURL(blob);
-
-    const a = document.createElement("a");
-
-    a.href = url;
-
-    a.download = type === "audio" ? "audio.mp3" : "video.mp4";
-
-    document.body.appendChild(a);
-
-    a.click();
-
-    a.remove();
-
-    window.URL.revokeObjectURL(url);
-
-}
-
-/* Replace startDownload() success section */
-
-async function downloadFile(type){
-
-    const url = urlInput.value.trim();
-
-    if(url===""){
-
-        alert("Please paste a valid link.");
-
-        return;
-
-    }
-
-    resetProgress();
-
-    animateProgress();
-
-    title.innerText="Downloading...";
-    channel.innerText="Please wait...";
-
-    try{
-
-        const response = await fetch("/download",{
-
-            method:"POST",
-
-            headers:{
-                "Content-Type":"application/json"
-            },
-
-            body:JSON.stringify({
-
-                url:url,
-                type:type
-
-            })
-
+    // ২. প্ল্যাটফর্ম কার্ড সিলেকশন টগল
+    platformCards.forEach(card => {
+        card.addEventListener("click", function () {
+            platformCards.forEach(c => c.classList.remove("active"));
+            this.classList.add("active");
         });
+    });
 
-        if(!response.ok){
-
-            throw new Error("Server Error");
-
+    // ৩. মেইন ডাউনলোড বাটন ক্লিকে প্রগ্রেস অ্যানিমেশন শো
+    startDownloadBtn.addEventListener("click", function () {
+        if (!videoUrlInput.value.trim()) {
+            alert("Please paste a target video link first!");
+            return;
         }
 
-        await saveFile(response,type);
+        // রিয়েল ইন্টারফেসের মতো প্রগ্রেস বার ০ থেকে শুরু করা
+        progressCard.style.display = "block";
+        successCard.style.display = "none";
+        progressBarFill.style.width = "0%";
 
-        title.innerText="Download Complete";
+        // প্রগ্রেস বার স্মুথ লোড করানোর ফেক ইন্টারভাল টাইমার
+        let currentWidth = 0;
+        const interval = setInterval(() => {
+            currentWidth += 5;
+            progressBarFill.style.width = currentWidth + "%";
 
-        channel.innerText="File saved successfully.";
-
-    }
-
-    catch(error){
-
-        title.innerText="Download Failed";
-
-        channel.innerText=error.message;
-
-        alert(error.message);
-
-    }
-
-}
-
-/* Final Button Connection */
-
-mp4Btn.onclick = ()=> downloadFile("video");
-
-mp3Btn.onclick = ()=> downloadFile("audio");
+            if (currentWidth >= 100) {
+                clearInterval(interval);
+                // প্রগ্রেস শেষ হলে সাকসেস প্যানেল কার্ড শো করা
+                setTimeout(() => {
+                    progressCard.style.display = "none";
+                    successCard.style.display = "flex";
+                }, 400);
+            }
+        }, 150);
+    });
+});
