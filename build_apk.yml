@@ -1,3 +1,11 @@
+      - name: Build APK
+        run: |
+          # SDK লাইসেন্স এক্সেপ্ট করা
+          mkdir -p ~/.android
+          touch ~/.android/repositories.cfg
+          yes | sdkmanager --licenses
+          buildozer android debug
+
 name: Build APK
 
 on:
