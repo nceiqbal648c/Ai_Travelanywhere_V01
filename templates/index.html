@@ -1,79 +1,50 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI Travel Anywhere</title>
-
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <title>Ai_Travel_Anywhere</title>
+    <style>
+        body { 
+            background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), url('{{ url_for('static', filename='background.jpg') }}'); 
+            background-size: cover; 
+            color: white; 
+            display: flex; 
+            flex-direction: column; 
+            align-items: center; 
+            justify-content: center; 
+            height: 100vh; 
+            margin: 0;
+            font-family: sans-serif; 
+        }
+        .header { text-align: center; margin-bottom: 30px; }
+        .logo { width: 120px; border-radius: 50%; border: 2px solid cyan; }
+        .btn { 
+            padding: 15px 40px; 
+            margin: 10px; 
+            background: rgba(255,255,255,0.1); 
+            border: 1px solid rgba(255,255,255,0.2); 
+            color: white; 
+            border-radius: 50px; 
+            cursor: pointer; 
+            transition: 0.3s; 
+            font-weight: bold;
+        }
+        .btn:active { transform: scale(0.95); background: rgba(255,255,255,0.3); }
+        .footer { position: fixed; bottom: 20px; width: 100%; text-align: center; }
+        .footer img { width: 150px; opacity: 0.8; }
+    </style>
 </head>
-
 <body>
-
-<div class="background-overlay"></div>
-
-<div class="main-container">
-
-    <div class="logo-section">
-        <img src="{{ url_for('static', filename='logo.png') }}" class="logo">
-        <h1>AI Travel Anywhere</h1>
-        <p>Fast • Secure • Premium Downloader</p>
+    <div class="header">
+        <img src="{{ url_for('static', filename='logo.png') }}" class="logo" alt="Logo">
+        <h1>Ai_Travel_Anywhere</h1>
     </div>
 
-    <div class="glass-card">
+    <form action="/download" method="POST">
+        <button class="btn" type="submit">DOWNLOAD MEDIA</button>
+    </form>
 
-        <input
-            id="video-url"
-            type="text"
-            placeholder="Paste YouTube / Facebook / Instagram Link">
-
-        <button id="paste-btn">
-            📋 Paste Link
-        </button>
-
-        <button class="download-btn mp4">
-            🎥 Download MP4
-        </button>
-
-        <button class="download-btn mp3">
-            🎵 Download MP3
-        </button>
-
+    <div class="footer">
+        <img src="{{ url_for('static', filename='1000063818.png') }}" alt="Signature">
     </div>
-
-    <div class="preview-card">
-
-        <img id="thumbnail"
-             src=""
-             style="display:none;">
-
-        <h2 id="video-title">
-            Video title will appear here
-        </h2>
-
-        <p id="channel-name">
-            Channel Name
-        </p>
-
-    </div>
-
-    <div class="progress-section">
-
-        <div class="progress-bar">
-
-            <div id="progress"></div>
-
-        </div>
-
-        <span id="percent">
-            0%
-        </span>
-
-    </div>
-
-</div>
-
-<script src="{{ url_for('static', filename='script.js') }}"></script>
-
 </body>
 </html>
