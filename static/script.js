@@ -1,57 +1,65 @@
-document.addEventListener("DOMContentLoaded", function () {
-    const pasteBtn = document.getElementById("pasteBtn");
-    const videoUrlInput = document.getElementById("videoUrl");
-    const platformCards = document.querySelectorAll(".platform-card");
-    const startDownloadBtn = document.getElementById("startDownloadBtn");
+let selectedPlatform = 'youtube';
+
+// প্ল্যাটফর্ম সিলেক্ট করার লজিক
+function selectPlatform(platform) {
+    selectedPlatform = platform;
+    document.querySelectorAll('.platform-card').forEach(card => {
+        card.classList.remove('active');
+    });
+    document.querySelector('.' + platform).classList.add('active');
+}
+
+// ক্লিপবোর্ড থেকে লিঙ্ক পেস্ট করার লজিক
+async function pasteLink() {
+    try {
+        const text = await navigator.clipboard.readText();
+        document.getElementById('video-url').value = text;
+    } catch (err) {
+        // যদি পারমিশন না থাকে তবে ম্যানুয়ালি করতে বলবে
+        console.log('Clipboard access denied');
+    }
+}
+
+// আসল ডাউনলোড লজিক যা পাইথনের সাথে কথা বলবে
+function startDownload() {
+    const urlInput = document.getElementById('video-url').value;
     
-    const progressCard = document.getElementById("progressCard");
-    const successCard = document.getElementById("successCard");
-    const progressBarFill = document.getElementById("progressBarFill");
+    if (!urlInput) {
+        alert('দয়া করে আগে একটি লিঙ্ক পেস্ট করুন!');
+        return;
+    }
 
-    // ১. পেস্ট বাটন ট্রিগার (ক্লিপবোর্ড থেকে লিংক রিড করার কোড)
-    pasteBtn.addEventListener("click", async function () {
-        try {
-            const text = await navigator.clipboard.readText();
-            videoUrlInput.value = text;
-        } catch (err) {
-            alert("Clipboard read permission denied! Paste text manually.");
+    // UI এর প্রোগ্রেস ও স্পিড সেকশন শো করা
+    document.getElementById('progress-container').classList.remove('hidden');
+    document.getElementById('speed-container').classList.remove('hidden');
+    document.getElementById('success-container').classList.add('hidden');
+
+    // পাইথন Flask ব্যাকএন্ডে ডেটা পাঠানো
+    fetch('/download', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            url: urlInput,
+            type: 'video' // আপনার পাইথন কোড dl_type == 'audio' ছাড়া বাকি সব ভিডিও হিসেবে ধরে
+        })
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Download failed');
         }
+        return response.json();
+    })
+    .then(data => {
+        // ডাউনলোড সফল হলে সাকসেস মেসেজ দেখানো
+        document.getElementById('progress-container').classList.add('hidden');
+        document.getElementById('speed-container').classList.add('hidden');
+        document.getElementById('success-container').classList.remove('hidden');
+    })
+    .catch(error => {
+        alert('ডাউনলোড করতে সমস্যা হয়েছে! লিঙ্কটি আবার চেক করুন।');
+        document.getElementById('progress-container').classList.add('hidden');
+        document.getElementById('speed-container').classList.add('hidden');
     });
-
-    // ২. প্ল্যাটফর্ম কার্ড সিলেকশন টগল
-    platformCards.forEach(card => {
-        card.addEventListener("click", function () {
-            platformCards.forEach(c => c.classList.remove("active"));
-            this.classList.add("active");
-        });
-    });
-
-    // ৩. মেইন ডাউনলোড বাটন ক্লিকে প্রগ্রেস অ্যানিমেশন শো
-    startDownloadBtn.addEventListener("click", function () {
-        if (!videoUrlInput.value.trim()) {
-            alert("Please paste a target video link first!");
-            return;
-        }
-
-        // রিয়েল ইন্টারফেসের মতো প্রগ্রেস বার ০ থেকে শুরু করা
-        progressCard.style.display = "block";
-        successCard.style.display = "none";
-        progressBarFill.style.width = "0%";
-
-        // প্রগ্রেস বার স্মুথ লোড করানোর ফেক ইন্টারভাল টাইমার
-        let currentWidth = 0;
-        const interval = setInterval(() => {
-            currentWidth += 5;
-            progressBarFill.style.width = currentWidth + "%";
-
-            if (currentWidth >= 100) {
-                clearInterval(interval);
-                // প্রগ্রেস শেষ হলে সাকসেস প্যানেল কার্ড শো করা
-                setTimeout(() => {
-                    progressCard.style.display = "none";
-                    successCard.style.display = "flex";
-                }, 400);
-            }
-        }, 150);
-    });
-});
+}

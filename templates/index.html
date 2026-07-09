@@ -4,40 +4,124 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AI_TRAVEL_ANYWHERE</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <style>
-        body { background-color: #050a14; color: white; font-family: 'Segoe UI', sans-serif; display: flex; justify-content: center; padding: 20px; }
-        .container { width: 100%; max-width: 400px; background: #0c111c; border: 2px solid #1a2436; border-radius: 25px; padding: 25px; box-shadow: 0 0 25px rgba(0, 242, 255, 0.2); text-align: center; }
-        h1 { color: #00f2ff; font-size: 22px; margin-bottom: 20px; text-shadow: 0 0 10px rgba(0, 242, 255, 0.5); }
-        .input-group { background: #161b22; border: 1px solid #30363d; padding: 12px; border-radius: 15px; display: flex; gap: 10px; margin-bottom: 20px; }
-        input { background: none; border: none; color: white; width: 100%; outline: none; }
-        .btn-paste { background: #ff9500; border: none; padding: 8px 15px; border-radius: 8px; color: white; font-weight: bold; cursor: pointer; }
-        .social-buttons { display: flex; justify-content: center; gap: 20px; margin-top: 20px; }
-        .social-btn { font-size: 30px; color: #fff; text-decoration: none; transition: 0.3s; }
-        .fa-youtube { color: #ff0000; }
-        .fa-facebook { color: #1877f2; }
-        .fa-tiktok { color: #ffffff; } /* টিকটক লোগো সাদা রেখেছি যেন ডার্ক থিমে ভালো লাগে */
-        .social-btn:hover { transform: scale(1.2); }
-        .creator-tag { color: #00f2ff; font-size: 14px; margin-top: 30px; font-weight: bold; border-top: 1px solid #1a2436; padding-top: 15px; }
-    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
-    <div class="container">
-        <h1>AI_TRAVEL_ANYWHERE</h1>
-        <div class="input-group">
-            <input type="text" placeholder="Paste your link here...">
-            <button class="btn-paste">PASTE</button>
+    <div class="app-container">
+        <!-- Header Section -->
+        <header class="app-header">
+            <button class="icon-btn menu-btn"><i class="fas fa-bars"></i></button>
+            <div class="logo-area">
+                <div class="logo-icon"><i class="fas fa-globe-americas"></i></div>
+                <h1>ΔI_TRAVEL_ΔNYWHERE</h1>
+            </div>
+            <button class="icon-btn settings-btn"><i class="fas fa-cog"></i></button>
+        </header>
+        <p class="subtitle">Download Anything. Anywhere. Anytime.</p>
+
+        <!-- Input Box Section -->
+        <div class="input-section neon-border">
+            <div class="input-wrapper">
+                <i class="fas fa-link link-icon"></i>
+                <input type="text" id="video-url" placeholder="Paste your link here..." autofocus>
+            </div>
+            <button class="btn-paste"><i class="fas fa-paste"></i> PASTE</button>
         </div>
-        
-        <div class="social-buttons">
-            <a href="#" class="social-btn"><i class="fab fa-youtube"></i></a>
-            <a href="#" class="social-btn"><i class="fab fa-facebook"></i></a>
-            <a href="#" class="social-btn"><i class="fab fa-tiktok"></i></a>
+        <p class="input-hint">YouTube, Facebook Reel or TikTok link</p>
+
+        <h3 class="section-title">CHOOSE PLATFORM</h3>
+
+        <!-- Platforms Cards Grid -->
+        <div class="platforms-grid">
+            <div class="platform-card youtube active">
+                <i class="fab fa-youtube"></i>
+                <span>YOUTUBE</span>
+                <span class="format-badge">MP4</span>
+            </div>
+            <div class="platform-card facebook">
+                <i class="fab fa-facebook-f"></i>
+                <span>FACEBOOK REEL</span>
+                <span class="format-badge">MP4</span>
+            </div>
+            <div class="platform-card tiktok">
+                <i class="fab fa-tiktok"></i>
+                <span>TIKTOK</span>
+                <span class="format-badge">MP4</span>
+            </div>
         </div>
 
-        <div class="creator-tag">
-            Ai Creator : Iqbal Ahmed
+        <!-- Middle Info and Start Circle -->
+        <div class="action-row">
+            <div class="info-card neon-border small">
+                <i class="fas fa-rocket"></i>
+                <div class="info-text">
+                    <strong>ULTRA FAST</strong>
+                    <span>High Speed Download</span>
+                </div>
+            </div>
+
+            <!-- Big Circular Download Button -->
+            <div class="download-circle-container">
+                <div class="glow-ring"></div>
+                <div class="circle-content">
+                    <i class="fas fa-download animate-bounce"></i>
+                    <span class="start-txt">START</span>
+                    <span class="dl-txt">DOWNLOAD</span>
+                </div>
+            </div>
+
+            <div class="info-card neon-border small">
+                <i class="fas fa-shield-alt"></i>
+                <div class="info-text">
+                    <strong>SAFE & SECURE</strong>
+                    <span>No Data Stored 100% Secure</span>
+                </div>
+            </div>
         </div>
+
+        <!-- Progress Area -->
+        <div class="progress-section neon-border">
+            <div class="progress-header">
+                <span>DOWNLOAD PROGRESS</span>
+                <span>75%</span>
+            </div>
+            <div class="progress-bar-wrapper">
+                <div class="progress-bar" style="width: 75%;"></div>
+            </div>
+            <div class="progress-footer">
+                <span class="status"><i class="fas fa-spinner fa-spin"></i> Downloading... Please wait</span>
+                <span class="stats">12.4 MB / 16.5 MB</span>
+            </div>
+        </div>
+
+        <!-- Speed Component -->
+        <div class="speed-card neon-border">
+            <i class="fas fa-tachometer-alt"></i>
+            <div class="speed-text">
+                <span>5.2 MB/s</span>
+                <strong>SPEED</strong>
+            </div>
+        </div>
+
+        <!-- Finished Success Alert -->
+        <div class="success-section neon-border">
+            <div class="success-left">
+                <div class="check-circle"><i class="fas fa-check"></i></div>
+                <div class="success-text">
+                    <h3>FINISHED DOWNLOADING!</h3>
+                    <p>Your file has been downloaded successfully.</p>
+                </div>
+            </div>
+            <button class="btn-open"><i class="fas fa-folder-open"></i> OPEN FILE</button>
+        </div>
+
+        <!-- Footer Branding -->
+        <footer class="app-footer-credits">
+            <div class="creator-tag">
+                <i class="fas fa-user"></i> Created by : <span>Iqbal Ahmed</span>
+            </div>
+        </footer>
     </div>
 </body>
 </html>
