@@ -343,3 +343,32 @@ body {
     opacity: 0.95;
     margin-top: 5px;
 }
+
+/* Royal Blue Neon Footer Branding */
+.app-footer-credits {
+    margin-top: 30px;
+    padding: 15px;
+    border-top: 1px dashed rgba(0, 114, 255, 0.4);
+    text-align: center;
+}
+.creator-tag {
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: #fff;
+    letter-spacing: 2px;
+    text-shadow: 0 0 10px #0052d4, 0 0 20px #0052d4;
+    margin-bottom: 5px;
+}
+.creator-tag span {
+    color: #0072ff;
+    text-shadow: 0 0 10px #0072ff, 0 0 25px #0072ff, 0 0 45px #0043a4;
+}
+.creator-bio {
+    font-size: 0.9rem;
+    color: #00f2fe;
+    font-family: 'Courier New', Courier, monospace;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    text-shadow: 0 0 5px #00f2fe, 0 0 15px #00f2fe;
+    margin-top: 5px;
+}

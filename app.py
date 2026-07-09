@@ -16,7 +16,6 @@ def download():
     data = request.get_json() or {}
     url = data.get('url')
     platform = data.get('platform', 'youtube')
-    dl_type = data.get('type', 'video')
     
     if not url:
         return jsonify({"status": "error", "message": "লিঙ্ক দেওয়া হয়নি!"}), 400
@@ -26,19 +25,19 @@ def download():
         'ignoreerrors': True,
     }
 
+    # প্রতিটি বাটন অনুযায়ী সঠিক ভিডিও ফরম্যাট ফোর্স করা
     if platform == 'facebook':
         ydl_opts['format'] = 'bestvideo[ext=mp4]+bestaudio[ext=m4a]/best[ext=mp4]/best'
     elif platform == 'tiktok':
         ydl_opts['format'] = 'bestvideo+bestaudio/best'
     else:
-        ydl_opts['format'] = 'best[ext=mp4]/best'
+        ydl_opts['format'] = 'bestvideo[ext=mp4]+bestaudio[ext=m4a]/best[ext=mp4]/best'
 
     try:
         with yt_dlp.YoutubeDL(ydl_opts) as ydl:
             info = ydl.extract_info(url, download=True)
             if not info:
-                return jsonify({"status": "error", "message": "ভিডিও প্রসেস করা যায়নি!"}), 400
-            
+                return jsonify({"status": "error", "message": "লিঙ্ক থেকে ভিডিও প্রসেস করা যায়নি!"}), 400
             filename = ydl.prepare_filename(info)
 
         phone_download_dir = '/storage/emulated/0/Download/AI_Travel_App'
@@ -54,14 +53,12 @@ def download():
         if os.path.exists(filename):
             destination = os.path.join(phone_download_dir, os.path.basename(filename))
             shutil.copy2(filename, destination)
-            return jsonify({"status": "success", "platform": platform, "message": "ডাউনলোড সম্পন্ন হয়েছে!"})
+            return jsonify({"status": "success", "platform": platform})
         else:
-            return jsonify({"status": "error", "message": "ফাইলটি ফোনে সেভ করা যায়নি।"}), 404
+            return jsonify({"status": "error", "message": "ফাইল ফোনে পাঠানো যায়নি।"}), 404
 
     except Exception as e:
-        print(f"Error occurred: {str(e)}")
         return jsonify({"status": "error", "message": str(e)}), 500
 
 if __name__ == '__main__':
-    port = int(os.environ.get("PORT", 5000))
-    app.run(host='0.0.0.0', port=port, debug=True)
+    app.run(host='0.0.0.0', port=5000, debug=True)
