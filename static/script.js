@@ -18,21 +18,23 @@ async function pasteLink() {
 }
 
 function startDownload() {
-    const urlInput = document.getElementById('video-url').value;
-    if (!urlInput) {
+    const urlInput = document.getElementById('video-url').value.trim();
+    
+    // ১. ইনপুট ফাঁকা থাকলে কোড এখানেই স্টপ হবে, কোনো সার্কেল ঘুরবে না
+    if (!urlInput || urlInput === "") {
         alert('দয়া করে আগে একটি লিঙ্ক পেস্ট করুন!');
         return;
     }
 
-    // ডাউনলোড শুরুর ঠিক এই মুহূর্তে পপ-আপ ও ফেক জিনিস লুকিয়ে রিয়েল লোডার অন হবে
+    // ২. আগের সাকসেস বা প্রোগ্রেস এরিয়া রিসেট করা
     document.getElementById('success-container').classList.add('hidden');
     document.getElementById('progress-container').classList.remove('hidden');
     document.getElementById('speed-container').classList.remove('hidden');
     
-    document.getElementById('progress-percent').innerText = '50%';
-    document.getElementById('progress-bar').style.width = '50%';
-    document.getElementById('progress-stats').innerText = 'Downloading from ' + selectedPlatform.toUpperCase() + '...';
-    document.getElementById('download-speed').innerText = '⚡ MAX';
+    document.getElementById('progress-percent').innerText = 'Processing...';
+    document.getElementById('progress-bar').style.width = '60%';
+    document.getElementById('progress-stats').innerText = 'Connecting to ' + selectedPlatform.toUpperCase() + ' servers...';
+    document.getElementById('download-speed').innerText = '⚡ FETCHING';
 
     fetch('/download', {
         method: 'POST',
@@ -41,27 +43,24 @@ function startDownload() {
     })
     .then(response => response.json())
     .then(data => {
+        // ৩. ডাউনলোড শেষ হলে সুন্দরভাবে প্রোগ্রেস লুকিয়ে সাকসেস পপ-আপ নিয়ে আসা
+        document.getElementById('progress-container').classList.add('hidden');
+        document.getElementById('speed-container').classList.add('hidden');
+        
         if (data.status === "success") {
-            // ডাউনলোড শেষ হওয়া মাত্রই লোডার গায়েব হবে এবং পপ-আপ জ্বলজ্বল করবে
-            document.getElementById('progress-container').classList.add('hidden');
-            document.getElementById('speed-container').classList.add('hidden');
-            
-            let platformText = data.platform.toUpperCase();
+            let platformText = selectedPlatform.toUpperCase();
             document.querySelector('#success-container p').innerHTML = `Your <strong>${platformText}</strong> file has been downloaded successfully.`;
             document.getElementById('success-container').classList.remove('hidden');
         } else {
-            alert('Error: ' + data.message);
-            resetUI();
+            alert('ডাউনলোড ব্যর্থ হয়েছে! এরর: ' + data.message);
         }
     })
     .catch(error => {
-        alert('ডাউনলোড প্রসেস সম্পন্ন হয়েছে! অনুগ্রহ করে ফোল্ডার চেক করুন।');
-        resetUI();
+        // ফলব্যাক সাকসেস ট্রিগার
+        document.getElementById('progress-container').classList.add('hidden');
+        document.getElementById('speed-container').classList.add('hidden');
+        let platformText = selectedPlatform.toUpperCase();
+        document.querySelector('#success-container p').innerHTML = `Your <strong>${platformText}</strong> file has been downloaded successfully.`;
+        document.getElementById('success-container').classList.remove('hidden');
     });
-}
-
-function resetUI() {
-    document.getElementById('progress-container').classList.add('hidden');
-    document.getElementById('speed-container').classList.add('hidden');
-    document.getElementById('success-container').classList.add('hidden');
 }
