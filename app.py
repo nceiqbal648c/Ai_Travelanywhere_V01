@@ -1,69 +1,71 @@
 import os
+import re
 from flask import Flask, render_template, request, jsonify, send_from_directory
 import yt_dlp
 
 app = Flask(__name__)
+
+# ডাউনলোড এবং আপলোড ফোল্ডার কনফিগারেশন
 DOWNLOAD_FOLDER = 'downloads'
+STATIC_FOLDER = 'static'
 os.makedirs(DOWNLOAD_FOLDER, exist_ok=True)
+os.makedirs(STATIC_FOLDER, exist_ok=True)
 
 @app.route('/')
 def index():
     return render_template('index.html')
 
 @app.route('/download', methods=['POST'])
-def download():
-    data = request.get_json() or {}
-    url = data.get('url')
+def download_video():
+    data = request.json
+    video_url = data.get('url')
     platform = data.get('platform', 'youtube')
     
-    if not url:
-        return jsonify({"status": "error", "message": "লিঙ্ক দেওয়া হয়নি!"}), 400
-
-    # ইউনিক ও মেমোরি-সেভিং নাম তৈরি
-    ydl_opts = {
-        'outtmpl': os.path.join(DOWNLOAD_FOLDER, f'{platform}_%(title).20s.%(ext)s'),
-        'ignoreerrors': True,
-    }
-
-    # অল প্ল্যাটফর্ম অপ্টিমাইজড MP4 ফরম্যাট ফোর্স করা (ইউজারের মেমোরি বাঁচাতে)
-    if platform == 'facebook':
-        ydl_opts['format'] = 'bestvideo[ext=mp4]+bestaudio[ext=m4a]/best[ext=mp4]/best'
-    elif platform == 'tiktok':
-        ydl_opts['format'] = 'bestvideo+bestaudio/best'
-    else:
-        ydl_opts['format'] = 'bestvideo[ext=mp4]+bestaudio[ext=m4a]/best[ext=mp4]/best'
+    if not video_url:
+        return jsonify({'status': 'error', 'message': 'URL পাওয়া যায়নি!'}), 400
 
     try:
+        ydl_opts = {
+            'format': 'best[ext=mp4]/best',
+            'outtmpl': os.path.join(DOWNLOAD_FOLDER, '%(title)s.%(ext)s'),
+            'noplaylist': True,
+        }
+        
         with yt_dlp.YoutubeDL(ydl_opts) as ydl:
-            info = ydl.extract_info(url, download=True)
-            if not info:
-                return jsonify({"status": "error", "message": "ভিডিও প্রসেস করা যায়নি!"}), 400
+            info = ydl.extract_info(video_url, download=True)
             filename = ydl.prepare_filename(info)
-
-        if not os.path.exists(filename):
-            base_name = os.path.splitext(filename)[0]
-            for f in os.listdir(DOWNLOAD_FOLDER):
-                if f.startswith(os.path.basename(base_name)):
-                    filename = os.path.join(DOWNLOAD_FOLDER, f)
-                    break
-
-        if os.path.exists(filename):
-            file_title = os.path.basename(filename)
-            return jsonify({
-                "status": "success", 
-                "platform": platform, 
-                "file_url": f"/get-file/{file_title}"
-            })
-        else:
-            return jsonify({"status": "error", "message": "ফাইলটি সার্ভারে পাওয়া যায়নি।"}), 404
-
+            basename = os.path.basename(filename)
+            
+        return jsonify({
+            'status': 'success',
+            'file_url': f'/get-file/{basename}'
+        })
     except Exception as e:
-        return jsonify({"status": "error", "message": str(e)}), 500
+        return jsonify({'status': 'error', 'message': str(e)}), 500
 
 @app.route('/get-file/<filename>')
 def get_file(filename):
-    # ডিরেক্ট ফোনে ডাউনলোড প্রম্পট ট্রিগার করার সিকিউরড রুট
     return send_from_directory(DOWNLOAD_FOLDER, filename, as_attachment=True)
+
+# 🔐 নতুন সিক্রেট অ্যাডমিন ইমেজ আপলোড রুট
+@app.route('/admin/upload-profile', methods=['POST'])
+def upload_profile():
+    password = request.form.get('password')
+    if password != '1234':  # আপনার সিক্রেট পাসওয়ার্ড
+        return jsonify({'status': 'error', 'message': 'ভুল পাসওয়ার্ড! অ্যাক্সেস ডিনাইড।'}), 403
+        
+    if 'image' not in request.files:
+        return jsonify({'status': 'error', 'message': 'কোনো ছবি পাওয়া যায়নি!'}), 400
+        
+    file = request.files['image']
+    if file.filename == '':
+        return jsonify({'status': 'error', 'message': 'ফাইলের নাম খালি!'}), 400
+        
+    # সরাসরি static ফোল্ডারে profile.jpg নামে সেভ হবে (আগেরটা রিপ্লেস হয়ে যাবে)
+    file_path = os.path.join(STATIC_FOLDER, 'profile.jpg')
+    file.save(file_path)
+    
+    return jsonify({'status': 'success', 'message': 'প্রোফাইল ছবি সফলভাবে পরিবর্তন হয়েছে!'})
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000, debug=True)

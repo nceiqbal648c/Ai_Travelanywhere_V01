@@ -80,7 +80,7 @@
             </div>
         </div>
 
-        <!-- Progress Area (Hidden by Default) -->
+        <!-- Progress Area -->
         <div class="progress-section neon-border hidden" id="progress-container">
             <div class="progress-header">
                 <span>DOWNLOAD PROGRESS</span>
@@ -95,7 +95,7 @@
             </div>
         </div>
 
-        <!-- Speed Component (Hidden by Default) -->
+        <!-- Speed Component -->
         <div class="speed-card neon-border hidden" id="speed-container">
             <i class="fas fa-tachometer-alt"></i>
             <div class="speed-text">
@@ -104,7 +104,7 @@
             </div>
         </div>
 
-        <!-- Finished Success Alert (Clean UI - Removed Open File) -->
+        <!-- Finished Success Alert -->
         <div class="success-section neon-border hidden" id="success-container">
             <div class="success-left">
                 <div class="check-circle"><i class="fas fa-check"></i></div>
@@ -115,7 +115,20 @@
             </div>
         </div>
 
-        <!-- ROYAL BLUE NEON FOOTER BY IQBAL AHMED -->
+        <!-- 📸 IQBAL BHAI'S DYNAMIC TRAVEL CARD (DOUBLE CLICK TO UPLOAD) -->
+        <div class="travel-prompt-card neon-border" id="travel-profile-card" ondblclick="triggerAdminUpload()">
+            <div class="travel-avatar-wrapper">
+                <img id="profile-display-img" src="{{ url_for('static', filename='profile.jpg') }}?t={{ range(1, 9999) | choice }}" alt="Iqbal Ahmed" class="travel-avatar" onerror="this.src='https://images.unsplash.com/photo-1506744038136-46273834b3fb?w=150';">
+            </div>
+            <div class="travel-prompt-info">
+                <h4><i class="fas fa-compass"></i> WANDERLUST & AI CREATOR</h4>
+                <p class="prompt-contact-text">If you need this AI prompt, please contact: <span>jsi.iqbal@gmail.com</span></p>
+            </div>
+            <!-- হিডেন গ্যালারি ওপেনার ফাইল ইনপুট -->
+            <input type="file" id="admin-image-input" style="display: none;" accept="image/*" onchange="handleAdminImageUpload(this)">
+        </div>
+
+        <!-- FOOTER CREDITS -->
         <footer class="app-footer-credits">
             <div class="creator-tag">
                 CREATED BY : <span>IQBAL AHMED</span>
@@ -132,10 +145,10 @@
             <span class="close-btn" onclick="toggleGuide()">&times;</span>
             <h2><i class="fas fa-info-circle"></i> HOW TO USE</h2>
             <div class="guide-steps">
-                <p><strong>১. লিঙ্ক কপি করুন:</strong> আপনি যে ভিডিওটি নামাতে চান (YouTube, FB বা TikTok) তার লিঙ্কটি কপি করুন।</p>
+                <p><strong>১. লিঙ্ক কপি করুন:</strong> ভিডিওর লিঙ্কটি কপি করুন।</p>
                 <p><strong>২. পেস্ট করুন:</strong> অ্যাপে এসে <strong>PASTE</strong> বাটনে চাপ দিন।</p>
-                <p><strong>৩. প্ল্যাটফর্ম বাছুন:</strong> নিচে থেকে সঠিক বাটনটি (YouTube/FB/TikTok) সিলেক্ট করুন।</p>
-                <p><strong>৪. ডাউনলোড শুরু:</strong> মাঝের গোল <strong>START</strong> বাটনে চাপ দিলেই ফোনে সরাসরি স্টোরেজ ফ্রেন্ডলি <strong>MP4</strong> ভিডিও সেভ হয়ে যাবে।</p>
+                <p><strong>৩. প্ল্যাটফর্ম বাছুন:</strong> নিচে থেকে সঠিক বাটনটি সিলেক্ট করুন।</p>
+                <p><strong>৪. ডাউনলোড শুরু:</strong> মাঝের গোল <strong>START</strong> বাটনে চাপ দিন।</p>
             </div>
         </div>
     </div>
