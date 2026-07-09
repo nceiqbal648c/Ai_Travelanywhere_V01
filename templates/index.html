@@ -26,7 +26,7 @@
                 <i class="fas fa-link link-icon"></i>
                 <input type="text" id="video-url" placeholder="Paste your link here..." autofocus>
             </div>
-            <button class="btn-paste"><i class="fas fa-paste"></i> PASTE</button>
+            <button class="btn-paste" onclick="pasteLink()"><i class="fas fa-paste"></i> PASTE</button>
         </div>
         <p class="input-hint">YouTube, Facebook Reel or TikTok link</p>
 
@@ -34,17 +34,17 @@
 
         <!-- Platforms Cards Grid -->
         <div class="platforms-grid">
-            <div class="platform-card youtube active">
+            <div class="platform-card youtube active" onclick="selectPlatform('youtube')">
                 <i class="fab fa-youtube"></i>
                 <span>YOUTUBE</span>
                 <span class="format-badge">MP4</span>
             </div>
-            <div class="platform-card facebook">
+            <div class="platform-card facebook" onclick="selectPlatform('facebook')">
                 <i class="fab fa-facebook-f"></i>
                 <span>FACEBOOK REEL</span>
                 <span class="format-badge">MP4</span>
             </div>
-            <div class="platform-card tiktok">
+            <div class="platform-card tiktok" onclick="selectPlatform('tiktok')">
                 <i class="fab fa-tiktok"></i>
                 <span>TIKTOK</span>
                 <span class="format-badge">MP4</span>
@@ -62,7 +62,7 @@
             </div>
 
             <!-- Big Circular Download Button -->
-            <div class="download-circle-container">
+            <div class="download-circle-container" onclick="startDownload()">
                 <div class="glow-ring"></div>
                 <div class="circle-content">
                     <i class="fas fa-download animate-bounce"></i>
@@ -80,32 +80,32 @@
             </div>
         </div>
 
-        <!-- Progress Area -->
-        <div class="progress-section neon-border">
+        <!-- Progress Area (Hidden by Default) -->
+        <div class="progress-section neon-border hidden" id="progress-container">
             <div class="progress-header">
                 <span>DOWNLOAD PROGRESS</span>
-                <span>75%</span>
+                <span id="progress-percent">0%</span>
             </div>
             <div class="progress-bar-wrapper">
-                <div class="progress-bar" style="width: 75%;"></div>
+                <div class="progress-bar" id="progress-bar" style="width: 0%;"></div>
             </div>
             <div class="progress-footer">
                 <span class="status"><i class="fas fa-spinner fa-spin"></i> Downloading... Please wait</span>
-                <span class="stats">12.4 MB / 16.5 MB</span>
+                <span class="stats" id="progress-stats">Processing...</span>
             </div>
         </div>
 
-        <!-- Speed Component -->
-        <div class="speed-card neon-border">
+        <!-- Speed Component (Hidden by Default) -->
+        <div class="speed-card neon-border hidden" id="speed-container">
             <i class="fas fa-tachometer-alt"></i>
             <div class="speed-text">
-                <span>5.2 MB/s</span>
+                <span id="download-speed">-- MB/s</span>
                 <strong>SPEED</strong>
             </div>
         </div>
 
-        <!-- Finished Success Alert -->
-        <div class="success-section neon-border">
+        <!-- Finished Success Alert (Hidden by Default) -->
+        <div class="success-section neon-border hidden" id="success-container">
             <div class="success-left">
                 <div class="check-circle"><i class="fas fa-check"></i></div>
                 <div class="success-text">
@@ -116,12 +116,17 @@
             <button class="btn-open"><i class="fas fa-folder-open"></i> OPEN FILE</button>
         </div>
 
-        <!-- Footer Branding -->
+        <!-- NEW NEON GRAPHIC FOOTER BY IQBAL AHMED -->
         <footer class="app-footer-credits">
             <div class="creator-tag">
-                <i class="fas fa-user"></i> Created by : <span>Iqbal Ahmed</span>
+                CREATED BY : <span>IQBAL AHMED</span>
+            </div>
+            <div class="creator-bio">
+                <i class="fas fa-microchip"></i> He is a professional AI creator.
             </div>
         </footer>
     </div>
+
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
 </body>
 </html>

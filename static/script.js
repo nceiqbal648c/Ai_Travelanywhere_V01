@@ -26,17 +26,15 @@ function startDownload() {
         return;
     }
 
-    // UI রিসেট ও লোডিং অ্যানিমেশন চালু
     document.getElementById('progress-container').classList.remove('hidden');
     document.getElementById('speed-container').classList.remove('hidden');
     document.getElementById('success-container').classList.add('hidden');
     
     document.getElementById('progress-percent').innerText = 'Processing...';
-    document.getElementById('progress-bar').style.width = '50%';
-    document.getElementById('progress-stats').innerText = 'Fetching from ' + selectedPlatform.toUpperCase() + '...';
-    document.getElementById('download-speed').innerText = '⚡ Connecting';
+    document.getElementById('progress-bar').style.width = '70%';
+    document.getElementById('progress-stats').innerText = 'Downloading from ' + selectedPlatform.toUpperCase() + '...';
+    document.getElementById('download-speed').innerText = '⚡ Max Speed';
 
-    // পাইথনের রিকোয়ারমেন্ট অনুযায়ী ডেটা পাঠানো
     fetch('/download', {
         method: 'POST',
         headers: {
@@ -45,31 +43,27 @@ function startDownload() {
         body: JSON.stringify({
             url: urlInput,
             platform: selectedPlatform,
-            type: 'video' // আপনার পাইথন কোড 'type' এর ওপর ডিপেন্ড করে
+            type: 'video'
         })
     })
-    .then(response => {
-        if (!response.ok) {
-            throw new Error('Network response was not ok');
-        }
-        return response.json();
-    })
+    .then(response => response.json())
     .then(data => {
-        if (data.status === "success" || data.message === "ডাউনলোড সম্পন্ন হয়েছে!") {
+        if (data.status === "success") {
             document.getElementById('progress-container').classList.add('hidden');
             document.getElementById('speed-container').classList.add('hidden');
+            
+            let platformText = data.platform.toUpperCase();
+            document.querySelector('#success-container p').innerHTML = `Your <strong>${platformText}</strong> file has been downloaded successfully.`;
+            
             document.getElementById('success-container').classList.remove('hidden');
         } else {
-            alert('ডাউনলোড ব্যর্থ: ' + (data.message || 'Unknown Error'));
+            alert('ডাউনলোড ব্যর্থ: ' + data.message);
             resetUI();
         }
     })
     .catch(error => {
-        alert('ডাউনলোড সম্পন্ন হয়েছে! (অনুগ্রহ করে আপনার ফোনের AI_Travel_App ফোল্ডারটি চেক করুন)');
-        // অনেক সময় লোকালহোস্টে রেসপন্স দেরিতে আসলে ক্যাচ-এ চলে যায়, তাই সাকসেস দেখিয়ে দেওয়া সেফ
-        document.getElementById('progress-container').classList.add('hidden');
-        document.getElementById('speed-container').classList.add('hidden');
-        document.getElementById('success-container').classList.remove('hidden');
+        alert('সংযোগ বিচ্ছিন্ন হয়েছে বা এরর ঘটেছে!');
+        resetUI();
     });
 }
 
