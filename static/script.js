@@ -17,7 +17,6 @@ async function pasteLink() {
     }
 }
 
-// গাইডলাইন পপ-আপ ওপেন ও ক্লোজ করার পারফেক্ট ফাংশন
 function toggleGuide() {
     const modal = document.getElementById('guide-modal');
     if (modal.classList.contains('hidden')) {
@@ -29,7 +28,6 @@ function toggleGuide() {
     }
 }
 
-// গাইডলাইনের বাইরে ফাঁকা জায়গায় টাচ করলেও যেন ক্লোজ হয়
 window.onclick = function(event) {
     const modal = document.getElementById('guide-modal');
     if (event.target == modal) {
@@ -46,7 +44,10 @@ function startDownload() {
         return;
     }
 
-    let confirmDownload = confirm(`আপনি কি এই লিঙ্ক থেকে ${selectedPlatform.toUpperCase()} ভিডিওটি ডাউনলোড করতে চান?`);
+    let displayPlatform = selectedPlatform.toUpperCase();
+    if(selectedPlatform === 'facebook') displayPlatform = 'FACEBOOK REEL';
+    
+    let confirmDownload = confirm(`আপনি কি এই লিঙ্ক থেকে ${displayPlatform} ভিডিওটি ডাউনলোড করতে চান?`);
     if (!confirmDownload) return;
 
     document.getElementById('success-container').classList.add('hidden');
@@ -54,8 +55,8 @@ function startDownload() {
     document.getElementById('speed-container').classList.remove('hidden');
     
     document.getElementById('progress-percent').innerText = 'Connecting...';
-    document.getElementById('progress-bar').style.width = '50%';
-    document.getElementById('progress-stats').innerText = 'Fetching optimized MP4 from ' + selectedPlatform.toUpperCase() + '...';
+    document.getElementById('progress-bar').style.width = '45%';
+    document.getElementById('progress-stats').innerText = 'Fetching optimized MP4 from ' + displayPlatform + '...';
     document.getElementById('download-speed').innerText = '⚡ OPTIMIZING';
 
     fetch('/download', {
@@ -65,23 +66,23 @@ function startDownload() {
     })
     .then(response => response.json())
     .then(data => {
+        // ডাউনলোড শেষ হওয়া মাত্রই স্পিড কম্পোনেন্ট এবং প্রোগ্রেস বার একসাথে গায়েব হবে
         document.getElementById('progress-container').classList.add('hidden');
         document.getElementById('speed-container').classList.add('hidden');
         
         if (data.status === "success") {
-            let platformText = selectedPlatform.toUpperCase();
-            document.querySelector('#success-container p').innerHTML = `Your <strong>${platformText}</strong> MP4 file has been downloaded successfully.`;
+            document.querySelector('#success-container p').innerHTML = `Your <strong>${displayPlatform}</strong> MP4 file has been downloaded successfully.`;
             document.getElementById('success-container').classList.remove('hidden');
             
-            // ইউজারের ফোনে অটোমেটিক ফাইল ডাউনলোড স্টার্ট করা
+            // ব্রাউজার ডাউনলোড ট্রিগার
             window.location.href = data.file_url;
         } else {
             alert('ডাউনলোড ব্যর্থ: ' + data.message);
         }
     })
     .catch(error => {
-        alert('সার্ভার রেডি! ফাইল স্টোরেজ চেক করুন।');
         document.getElementById('progress-container').classList.add('hidden');
         document.getElementById('speed-container').classList.add('hidden');
+        alert('সার্ভার প্রসেস রেডি! ফাইল স্টোরেজ চেক করুন।');
     });
 }
