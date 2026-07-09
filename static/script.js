@@ -6,6 +6,7 @@ function selectPlatform(platform) {
         card.classList.remove('active');
     });
     document.querySelector('.' + platform).classList.add('active');
+    console.log("Selected Platform Changed to: " + selectedPlatform);
 }
 
 async function pasteLink() {
@@ -25,15 +26,14 @@ function startDownload() {
         return;
     }
 
-    // ডাউনলোড শুরুর ইন্টারফেস ফ্রেশ করা
     document.getElementById('progress-container').classList.remove('hidden');
     document.getElementById('speed-container').classList.remove('hidden');
     document.getElementById('success-container').classList.add('hidden');
     
     document.getElementById('progress-percent').innerText = 'Processing...';
-    document.getElementById('progress-bar').style.width = '50%'; // লোডিং বোঝানোর জন্য ৫০% বর্ডার করা
-    document.getElementById('progress-stats').innerText = 'Downloading from ' + selectedPlatform + '...';
-    document.getElementById('download-speed').innerText = '⚡ Fast';
+    document.getElementById('progress-bar').style.width = '60%';
+    document.getElementById('progress-stats').innerText = 'Downloading from ' + selectedPlatform.toUpperCase() + '...';
+    document.getElementById('download-speed').innerText = '⚡ Max Speed';
 
     fetch('/download', {
         method: 'POST',
@@ -42,13 +42,13 @@ function startDownload() {
         },
         body: JSON.stringify({
             url: urlInput,
+            platform: selectedPlatform, // এখানে সিলেক্টেড বাটন পাঠানো হচ্ছে
             type: 'video'
         })
     })
     .then(response => response.json())
     .then(data => {
         if (data.status === "success") {
-            // ডাউনলোড একদম শেষ হলে সাকসেস দেখানো
             document.getElementById('progress-container').classList.add('hidden');
             document.getElementById('speed-container').classList.add('hidden');
             document.getElementById('success-container').classList.remove('hidden');

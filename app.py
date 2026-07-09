@@ -16,14 +16,16 @@ def index():
 def download():
     data = request.get_json() or {}
     url = data.get('url')
+    platform = data.get('platform', 'youtube') # ফ্রন্টএন্ড থেকে প্ল্যাটফর্ম রিসিভ করা
     dl_type = data.get('type', 'video')
     
     if not url:
-        return jsonify({"message": "লিঙ্ক দেওয়া হয়নি!"}), 400
+        return jsonify({"status": "error", "message": "লিঙ্ক দেওয়া হয়নি!"}), 400
 
-    # ফাইল নেম খুব বড় হওয়া আটকাতে টাইটেল ছোট করার রুল
+    # ফেসবুক বা টিকটকের টাইটেল অনেক সময় অদ্ভুত হয়, তাই সেফগার্ড হিসেবে জেনেশুনে ছোট করা
     ydl_opts = {
-        'outtmpl': os.path.join(DOWNLOAD_FOLDER, '%(title).50s.%(ext)s'),
+        'outtmpl': os.path.join(DOWNLOAD_FOLDER, f'{platform}_%(title).30s.%(ext)s'),
+        'ignoreerrors': True,
     }
 
     if dl_type == 'audio':
@@ -36,33 +38,45 @@ def download():
             }],
         })
     else:
+        # ফেসবুক ও টিকটকের জন্য বেস্ট কোয়ালিটি MP4 নিশ্চিত করা
         ydl_opts.update({
-            'format': 'best',
-            'merge_output_format': 'mp4'
+            'format': 'bestvideo[ext=mp4]+bestaudio[ext=m4a]/best[ext=mp4]/best',
         })
 
     try:
         with yt_dlp.YoutubeDL(ydl_opts) as ydl:
             info = ydl.extract_info(url, download=True)
+            if not info:
+                # যদি এক্সট্রাক্ট করতে না পারে, তবে প্রথম এন্ট্রি চেক করা (প্লেলিস্ট বা রিলসের জন্য)
+                if 'entries' in info and info['entries']:
+                    info = info['entries'][0]
+                else:
+                    return jsonify({"status": "error", "message": "ভিডিও প্রসেস করা যায়নি! লিঙ্কটি আবার চেক করুন।"}), 400
+            
             filename = ydl.prepare_filename(info)
             
-            # অডিওর ক্ষেত্রে এক্সটেনশন mp3 তে পরিবর্তন করা
             if dl_type == 'audio':
                 filename = os.path.splitext(filename)[0] + '.mp3'
 
-        # ফোনের মেইন ডাউনলোড ফোল্ডারে পাঠানো
         phone_download_dir = '/storage/emulated/0/Download/AI_Travel_App'
-        
-        # ফোল্ডার না থাকলে স্বয়ংক্রিয়ভাবে তৈরি করার লজিক (যা আগে ছিল না)
-        if not os.path.exists(phone_download_dir):
-            os.makedirs(phone_download_dir, exist_ok=True)
+        os.makedirs(phone_download_dir, exist_ok=True)
+
+        # যদি yt_dlp কোনো কারণে ফাইল খুঁজে না পায়, তবে ডিরেক্টরির ফাইল চেক করা
+        if not os.path.exists(filename):
+            # এক্সটেনশন ছাড়া ম্যাচিং চেক
+            base_name = os.path.splitext(filename)[0]
+            files = os.listdir(DOWNLOAD_FOLDER)
+            for f in files:
+                if f.startswith(os.path.basename(base_name)):
+                    filename = os.path.join(DOWNLOAD_FOLDER, f)
+                    break
 
         if os.path.exists(filename):
             destination = os.path.join(phone_download_dir, os.path.basename(filename))
             shutil.copy2(filename, destination)
             return jsonify({"status": "success", "message": "ডাউনলোড সম্পন্ন হয়েছে!"})
         else:
-            return jsonify({"status": "error", "message": "ফাইল খুঁজে পাওয়া যায়নি!"}), 404
+            return jsonify({"status": "error", "message": "ফাইলটি ফোনে সেভ করা যায়নি!"}), 404
 
     except Exception as e:
         print(f"Error occurred: {str(e)}")
