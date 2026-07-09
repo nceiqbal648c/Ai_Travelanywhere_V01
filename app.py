@@ -1,15 +1,14 @@
 import os
-import re
-from flask import Flask, render_template, request, jsonify, send_from_directory
+from flask import Flask, render_template, request, jsonify, send_from_directory, redirect, url_for, flash
 import yt_dlp
 
 app = Flask(__name__)
+app.secret_key = 'ai-travel-anywhere-key'
 
-# ডাউনলোড এবং আপলোড ফোল্ডার কনফিগারেশন
 DOWNLOAD_FOLDER = 'downloads'
-STATIC_FOLDER = 'static'
 os.makedirs(DOWNLOAD_FOLDER, exist_ok=True)
-os.makedirs(STATIC_FOLDER, exist_ok=True)
+
+ADMIN_PASSWORD = "IqbalTravel2026"
 
 @app.route('/')
 def index():
@@ -19,27 +18,19 @@ def index():
 def download_video():
     data = request.json
     video_url = data.get('url')
-    platform = data.get('platform', 'youtube')
-    
     if not video_url:
         return jsonify({'status': 'error', 'message': 'URL পাওয়া যায়নি!'}), 400
-
     try:
         ydl_opts = {
             'format': 'best[ext=mp4]/best',
             'outtmpl': os.path.join(DOWNLOAD_FOLDER, '%(title)s.%(ext)s'),
             'noplaylist': True,
         }
-        
         with yt_dlp.YoutubeDL(ydl_opts) as ydl:
             info = ydl.extract_info(video_url, download=True)
             filename = ydl.prepare_filename(info)
             basename = os.path.basename(filename)
-            
-        return jsonify({
-            'status': 'success',
-            'file_url': f'/get-file/{basename}'
-        })
+        return jsonify({'status': 'success', 'file_url': f'/get-file/{basename}'})
     except Exception as e:
         return jsonify({'status': 'error', 'message': str(e)}), 500
 
@@ -47,25 +38,24 @@ def download_video():
 def get_file(filename):
     return send_from_directory(DOWNLOAD_FOLDER, filename, as_attachment=True)
 
-# 🔐 নতুন সিক্রেট অ্যাডমিন ইমেজ আপলোড রুট
-@app.route('/admin/upload-profile', methods=['POST'])
+@app.route('/upload-profile', methods=['POST'])
 def upload_profile():
-    password = request.form.get('password')
-    if password != '1234':  # আপনার সিক্রেট পাসওয়ার্ড
-        return jsonify({'status': 'error', 'message': 'ভুল পাসওয়ার্ড! অ্যাক্সেস ডিনাইড।'}), 403
-        
-    if 'image' not in request.files:
-        return jsonify({'status': 'error', 'message': 'কোনো ছবি পাওয়া যায়নি!'}), 400
-        
-    file = request.files['image']
-    if file.filename == '':
-        return jsonify({'status': 'error', 'message': 'ফাইলের নাম খালি!'}), 400
-        
-    # সরাসরি static ফোল্ডারে profile.jpg নামে সেভ হবে (আগেরটা রিপ্লেস হয়ে যাবে)
-    file_path = os.path.join(STATIC_FOLDER, 'profile.jpg')
-    file.save(file_path)
+    input_password = request.form.get('profile_password')
+    file = request.files.get('profile_jpg')
     
-    return jsonify({'status': 'success', 'message': 'প্রোফাইল ছবি সফলভাবে পরিবর্তন হয়েছে!'})
+    if input_password == ADMIN_PASSWORD:
+        if file and file.filename != '':
+            upload_path = "/data/data/com.termux/files/home/AI_Travel_App/static/profile.jpg"
+            file.save(upload_path)
+            print("Image updated successfully!")
+            flash("সফলভাবে প্রোফাইল ছবি আপডেট হয়েছে!")
+        else:
+            flash("ছবি সিলেক্ট করেননি!")
+    else:
+        print("Unauthorized attempt: Wrong password!")
+        flash("ভুল পাসওয়ার্ড! অ্যাক্সেস নেই।")
+        
+    return redirect(url_for('index'))
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000, debug=True)
