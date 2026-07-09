@@ -1,6 +1,5 @@
 import os
-import shutil
-from flask import Flask, render_template, request, jsonify
+from flask import Flask, render_template, request, jsonify, send_from_directory
 import yt_dlp
 
 app = Flask(__name__)
@@ -20,12 +19,13 @@ def download():
     if not url:
         return jsonify({"status": "error", "message": "লিঙ্ক দেওয়া হয়নি!"}), 400
 
+    # ইউনিক ও মেমোরি-সেভিং নাম তৈরি
     ydl_opts = {
-        'outtmpl': os.path.join(DOWNLOAD_FOLDER, f'{platform}_%(title).30s.%(ext)s'),
+        'outtmpl': os.path.join(DOWNLOAD_FOLDER, f'{platform}_%(title).20s.%(ext)s'),
         'ignoreerrors': True,
     }
 
-    # প্রতিটি বাটন অনুযায়ী সঠিক ভিডিও ফরম্যাট ফোর্স করা
+    # অল প্ল্যাটফর্ম অপ্টিমাইজড MP4 ফরম্যাট ফোর্স করা (ইউজারের মেমোরি বাঁচাতে)
     if platform == 'facebook':
         ydl_opts['format'] = 'bestvideo[ext=mp4]+bestaudio[ext=m4a]/best[ext=mp4]/best'
     elif platform == 'tiktok':
@@ -37,11 +37,8 @@ def download():
         with yt_dlp.YoutubeDL(ydl_opts) as ydl:
             info = ydl.extract_info(url, download=True)
             if not info:
-                return jsonify({"status": "error", "message": "লিঙ্ক থেকে ভিডিও প্রসেস করা যায়নি!"}), 400
+                return jsonify({"status": "error", "message": "ভিডিও প্রসেস করা যায়নি!"}), 400
             filename = ydl.prepare_filename(info)
-
-        phone_download_dir = '/storage/emulated/0/Download/AI_Travel_App'
-        os.makedirs(phone_download_dir, exist_ok=True)
 
         if not os.path.exists(filename):
             base_name = os.path.splitext(filename)[0]
@@ -51,14 +48,22 @@ def download():
                     break
 
         if os.path.exists(filename):
-            destination = os.path.join(phone_download_dir, os.path.basename(filename))
-            shutil.copy2(filename, destination)
-            return jsonify({"status": "success", "platform": platform})
+            file_title = os.path.basename(filename)
+            return jsonify({
+                "status": "success", 
+                "platform": platform, 
+                "file_url": f"/get-file/{file_title}"
+            })
         else:
-            return jsonify({"status": "error", "message": "ফাইল ফোনে পাঠানো যায়নি।"}), 404
+            return jsonify({"status": "error", "message": "ফাইলটি সার্ভারে পাওয়া যায়নি।"}), 404
 
     except Exception as e:
         return jsonify({"status": "error", "message": str(e)}), 500
+
+@app.route('/get-file/<filename>')
+def get_file(filename):
+    # ডিরেক্ট ফোনে ডাউনলোড প্রম্পট ট্রিগার করার সিকিউরড রুট
+    return send_from_directory(DOWNLOAD_FOLDER, filename, as_attachment=True)
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000, debug=True)
