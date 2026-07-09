@@ -15,7 +15,7 @@
                 <div class="logo-icon"><i class="fas fa-globe-americas"></i></div>
                 <h1>ΔI_TRAVEL_ΔNYWHERE</h1>
             </div>
-            <button class="icon-btn settings-btn"><i class="fas fa-cog"></i></button>
+            <button class="guide-btn" onclick="toggleGuide()"><i class="fas fa-book-open"></i> GUIDE LINE</button>
         </header>
         <p class="subtitle">Download Anything. Anywhere. Anytime.</p>
 
@@ -28,7 +28,7 @@
         </div>
         <p class="input-hint">YouTube, Facebook Reel or TikTok link</p>
 
-        <h3 class="section-title">CHOOSE PLATFORM</h3>
+        <h3 class="section-title">CHOOSE PLATFORM (ACTIVE MP4)</h3>
 
         <div class="platforms-grid">
             <div class="platform-card youtube active" onclick="selectPlatform('youtube')">
@@ -52,8 +52,8 @@
             <div class="info-card neon-border small">
                 <i class="fas fa-rocket"></i>
                 <div class="info-text">
-                    <strong>ULTRA FAST</strong>
-                    <span>High Speed Download</span>
+                    <strong>STORAGE SAVER</strong>
+                    <span>Optimized MP4 Video</span>
                 </div>
             </div>
 
@@ -70,7 +70,7 @@
                 <i class="fas fa-shield-alt"></i>
                 <div class="info-text">
                     <strong>SAFE & SECURE</strong>
-                    <span>No Data Stored 100% Secure</span>
+                    <span>100% Secure Storage</span>
                 </div>
             </div>
         </div>
@@ -116,6 +116,19 @@
                 <i class="fas fa-microchip"></i> He is a professional AI creator.
             </div>
         </footer>
+    </div>
+
+    <div id="guide-modal" class="modal hidden">
+        <div class="modal-content neon-border">
+            <span class="close-btn" onclick="toggleGuide()">&times;</span>
+            <h2><i class="fas fa-info-circle"></i> HOW TO USE</h2>
+            <div class="guide-steps">
+                <p><strong>১. লিঙ্ক কপি করুন:</strong> আপনি যে ভিডিওটি নামাতে চান (YouTube, FB বা TikTok) তার লিঙ্কটি কপি করুন।</p>
+                <p><strong>২. পেস্ট করুন:</strong> অ্যাপে এসে <strong>PASTE</strong> বাটনে চাপ দিন।</p>
+                <p><strong>৩. প্ল্যাটফর্ম বাছুন:</strong> নিচে থেকে সঠিক বাটনটি (YouTube/FB/TikTok) সিলেক্ট করুন।</p>
+                <p><strong>৪. ডাউনলোড শুরু:</strong> মাঝের গোল <strong>START</strong> বাটনে চাপ দিলেই ফোনে সরাসরি স্টোরেজ ফ্রেন্ডলি <strong>MP4</strong> ভিডিও সেভ হয়ে যাবে।</p>
+            </div>
+        </div>
     </div>
 
     <script src="{{ url_for('static', filename='script.js') }}"></script>

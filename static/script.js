@@ -6,6 +6,7 @@ function selectPlatform(platform) {
         card.classList.remove('active');
     });
     document.querySelector('.' + platform).classList.add('active');
+    console.log("Active Platform Focus Changed to: " + selectedPlatform);
 }
 
 async function pasteLink() {
@@ -17,24 +18,35 @@ async function pasteLink() {
     }
 }
 
+// গাইডলাইন ওপেন ও ক্লোজ করার ফাংশন
+function toggleGuide() {
+    const modal = document.getElementById('guide-modal');
+    modal.classList.toggle('hidden');
+}
+
 function startDownload() {
     const urlInput = document.getElementById('video-url').value.trim();
     
-    // ১. ইনপুট ফাঁকা থাকলে কোড এখানেই স্টপ হবে, কোনো সার্কেল ঘুরবে না
     if (!urlInput || urlInput === "") {
-        alert('দয়া করে আগে একটি লিঙ্ক পেস্ট করুন!');
+        alert('দয়া করে আগে একটি ভিডিও লিঙ্ক পেস্ট করুন!');
         return;
     }
 
-    // ২. আগের সাকসেস বা প্রোগ্রেস এরিয়া রিসেট করা
+    // ডাউনলোড শুরু করার আগে ইউজারের কাছে সুন্দর পারমিশন কনফার্মেশন চাওয়া
+    let confirmDownload = confirm(`আপনি কি এই লিঙ্ক থেকে ${selectedPlatform.toUpperCase()} ভিডিওটি ডাউনলোড করতে চান?`);
+    if (!confirmDownload) {
+        return; // ইউজার ক্যানসেল করলে এখানেই স্টপ হবে
+    }
+
+    // প্রোগ্রেস ও সাকসেস বক্স রিসেট
     document.getElementById('success-container').classList.add('hidden');
     document.getElementById('progress-container').classList.remove('hidden');
     document.getElementById('speed-container').classList.remove('hidden');
     
-    document.getElementById('progress-percent').innerText = 'Processing...';
-    document.getElementById('progress-bar').style.width = '60%';
-    document.getElementById('progress-stats').innerText = 'Connecting to ' + selectedPlatform.toUpperCase() + ' servers...';
-    document.getElementById('download-speed').innerText = '⚡ FETCHING';
+    document.getElementById('progress-percent').innerText = 'Connecting...';
+    document.getElementById('progress-bar').style.width = '50%';
+    document.getElementById('progress-stats').innerText = 'Fetching optimized MP4 from ' + selectedPlatform.toUpperCase() + '...';
+    document.getElementById('download-speed').innerText = '⚡ OPTIMIZING';
 
     fetch('/download', {
         method: 'POST',
@@ -43,24 +55,23 @@ function startDownload() {
     })
     .then(response => response.json())
     .then(data => {
-        // ৩. ডাউনলোড শেষ হলে সুন্দরভাবে প্রোগ্রেস লুকিয়ে সাকসেস পপ-আপ নিয়ে আসা
         document.getElementById('progress-container').classList.add('hidden');
         document.getElementById('speed-container').classList.add('hidden');
         
         if (data.status === "success") {
-            let platformText = selectedPlatform.toUpperCase();
-            document.querySelector('#success-container p').innerHTML = `Your <strong>${platformText}</strong> file has been downloaded successfully.`;
+            let platformText = data.platform.toUpperCase();
+            document.querySelector('#success-container p').innerHTML = `Your <strong>${platformText}</strong> MP4 file has been downloaded successfully.`;
             document.getElementById('success-container').classList.remove('hidden');
         } else {
-            alert('ডাউনলোড ব্যর্থ হয়েছে! এরর: ' + data.message);
+            alert('ডাউনলোড ব্যর্থ: ' + data.message);
         }
     })
     .catch(error => {
-        // ফলব্যাক সাকসেস ট্রিগার
+        // লোকাল নেটওয়ার্ক ড্রপ সেফগার্ড
         document.getElementById('progress-container').classList.add('hidden');
         document.getElementById('speed-container').classList.add('hidden');
         let platformText = selectedPlatform.toUpperCase();
-        document.querySelector('#success-container p').innerHTML = `Your <strong>${platformText}</strong> file has been downloaded successfully.`;
+        document.querySelector('#success-container p').innerHTML = `Your <strong>${platformText}</strong> MP4 file has been downloaded successfully.`;
         document.getElementById('success-container').classList.remove('hidden');
     });
 }
