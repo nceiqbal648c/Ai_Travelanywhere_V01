@@ -118,7 +118,7 @@
         <!-- 📸 IQBAL BHAI'S DYNAMIC TRAVEL CARD (DOUBLE CLICK TO UPLOAD) -->
         <div class="travel-prompt-card neon-border" id="travel-profile-card" ondblclick="triggerAdminUpload()">
             <div class="travel-avatar-wrapper">
-                <img id="profile-display-img" src="{{ url_for('static', filename='profile.jpg') }}?t={{ range(1, 9999) | choice }}" alt="Iqbal Ahmed" class="travel-avatar" onerror="this.src='https://images.unsplash.com/photo-1506744038136-46273834b3fb?w=150';">
+<img id="profile-display-img" src="{{ url_for('static', filename='profile.jpg') }}?t={{ range(1, 9999) | random }}" alt="Iqbal Ahmed" class="travel-avatar" onerror="this.src='https://images.unsplash.com/photo-1506744038136-46273834b3fb?w=150';">
             </div>
             <div class="travel-prompt-info">
                 <h4><i class="fas fa-compass"></i> WANDERLUST & AI CREATOR</h4>

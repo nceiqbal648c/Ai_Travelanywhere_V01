@@ -28,25 +28,25 @@ function toggleGuide() {
     }
 }
 
-// 🔐 অ্যাডমিন সিক্রেট আপলোড ট্রিগার (ডাবল ক্লিক করলে পাসওয়ার্ড চাইবে)
+// 🔐 অ্যাডমিন সিক্রেট আপলোড ট্রিগার (কার্ডে ডাবল ক্লিক করলে প্রম্পট আসবে)
 function triggerAdminUpload() {
     const password = prompt("অনুগ্রহ করে সিক্রেট অ্যাডমিন পাসওয়ার্ড দিন:");
-    if (password === null) return; // বাতিল করলে ব্যাক
+    if (password === null) return; 
     
-    if (password === "1234") { // আপনার ডিফোল্ট সিক্রেট পাসওয়ার্ড
-        document.getElementById('admin-image-input').click(); // গ্যালারি ওপেন করবে
+    if (password === "1234") { 
+        document.getElementById('admin-image-input').click(); 
     } else {
         alert("ভুল পাসওয়ার্ড! আপনি ছবি পরিবর্তন করতে পারবেন না।");
     }
 }
 
-// 🚀 গ্যালারি থেকে ছবি সিলেক্ট করার পর ব্যাকএন্ডে পাঠানোর প্রসেস
+// 🚀 গ্যালারি থেকে ছবি সিলেক্ট করার পর আপলোড লজিক
 function handleAdminImageUpload(input) {
     if (!input.files || !input.files[0]) return;
     
     const formData = new FormData();
     formData.append('image', input.files[0]);
-    formData.append('password', '1234'); // যাচাইয়ের জন্য পাসওয়ার্ড পাঠানো হচ্ছে
+    formData.append('password', '1234'); 
     
     fetch('/admin/upload-profile', {
         method: 'POST',
@@ -56,7 +56,6 @@ function handleAdminImageUpload(input) {
     .then(data => {
         if (data.status === 'success') {
             alert(data.message);
-            // ইমেজ সোর্স রিফ্রেশ (ক্যাশিং এড়ানোর জন্য টাইমস্ট্যাম্প সহ)
             document.getElementById('profile-display-img').src = '/static/profile.jpg?t=' + new Date().getTime();
         } else {
             alert('ত্রুটি: ' + data.message);
@@ -81,7 +80,7 @@ function startDownload() {
     let confirmDownload = confirm(`আপনি কি এই লিঙ্ক থেকে ${displayPlatform} ভিডিওটি ডাউনলোড করতে চান?`);
     if (!confirmDownload) return;
 
-    document.getElementById('travel-profile-card').classList.add('hidden');
+    // নতুন ডাউনলোডের শুরুতে আগের সাকসেস মেসেজ ও স্পিড কার্ড রিসেট করা
     document.getElementById('success-container').classList.add('hidden');
     document.getElementById('progress-container').classList.remove('hidden');
     document.getElementById('speed-container').classList.remove('hidden');
@@ -98,9 +97,9 @@ function startDownload() {
     })
     .then(response => response.json())
     .then(data => {
+        // ডাউনলোড শেষ হলে প্রোগ্রেস ও স্পিড হাইড করা
         document.getElementById('progress-container').classList.add('hidden');
         document.getElementById('speed-container').classList.add('hidden');
-        document.getElementById('travel-profile-card').classList.remove('hidden');
         
         if (data.status === "success") {
             document.querySelector('#success-container p').innerHTML = `Your <strong>${displayPlatform}</strong> MP4 file has been downloaded successfully.`;
@@ -113,7 +112,6 @@ function startDownload() {
     .catch(error => {
         document.getElementById('progress-container').classList.add('hidden');
         document.getElementById('speed-container').classList.add('hidden');
-        document.getElementById('travel-profile-card').classList.remove('hidden');
         alert('সার্ভার প্রসেস রেডি! ফাইল স্টোরেজ চেক করুন।');
     });
 }
