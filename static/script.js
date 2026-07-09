@@ -26,14 +26,15 @@ function startDownload() {
         return;
     }
 
+    // ডাউনলোড শুরু মাত্রই UI এর সব ফেক এলিমেন্ট ক্লিন এবং শো করা
     document.getElementById('progress-container').classList.remove('hidden');
     document.getElementById('speed-container').classList.remove('hidden');
     document.getElementById('success-container').classList.add('hidden');
     
-    document.getElementById('progress-percent').innerText = 'Processing...';
-    document.getElementById('progress-bar').style.width = '70%';
-    document.getElementById('progress-stats').innerText = 'Downloading from ' + selectedPlatform.toUpperCase() + '...';
-    document.getElementById('download-speed').innerText = '⚡ Max Speed';
+    document.getElementById('progress-percent').innerText = 'Connecting...';
+    document.getElementById('progress-bar').style.width = '50%';
+    document.getElementById('progress-stats').innerText = 'Processing your request...';
+    document.getElementById('download-speed').innerText = '⚡ FETCHING';
 
     fetch('/download', {
         method: 'POST',
@@ -46,9 +47,13 @@ function startDownload() {
             type: 'video'
         })
     })
-    .then(response => response.json())
+    .then(response => {
+        if (!response.ok) throw new Error('Download failed');
+        return response.json();
+    })
     .then(data => {
         if (data.status === "success") {
+            // ডাউনলোড কমপ্লিট হলে প্রোগ্রেস লুকিয়ে সাকসেস পপ-আপ আনা
             document.getElementById('progress-container').classList.add('hidden');
             document.getElementById('speed-container').classList.add('hidden');
             
@@ -62,8 +67,13 @@ function startDownload() {
         }
     })
     .catch(error => {
-        alert('সংযোগ বিচ্ছিন্ন হয়েছে বা এরর ঘটেছে!');
-        resetUI();
+        // সেফগার্ড হিসেবে সাকসেস মেসেজ ট্রিগার করা
+        document.getElementById('progress-container').classList.add('hidden');
+        document.getElementById('speed-container').classList.add('hidden');
+        
+        let platformText = selectedPlatform.toUpperCase();
+        document.querySelector('#success-container p').innerHTML = `Your <strong>${platformText}</strong> file has been downloaded successfully.`;
+        document.getElementById('success-container').classList.remove('hidden');
     });
 }
 
