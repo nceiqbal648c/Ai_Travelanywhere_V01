@@ -2,101 +2,18 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI_TRAVEL_ANYWHERE</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
     <div class="app-container">
-        <!-- Flash Alert Messages -->
-        {% with messages = get_flashed_messages() %}
-          {% if messages %}
-            {% for message in messages %}
-              <div class="neon-border" style="background: rgba(0, 242, 254, 0.1); color: #00f2fe; padding: 10px; margin-bottom: 15px; text-align: center; border-radius: 8px;">
-                {{ message }}
-              </div>
-            {% endfor %}
-          {% endif %}
-        {% endwith %}
-
-        <header class="app-header">
-            <button class="icon-btn menu-btn"><i class="fas fa-bars"></i></button>
-            <div class="logo-area">
-                <div class="logo-icon"><i class="fas fa-globe-americas"></i></div>
-                <h1>ΔI_TRAVEL_ΔNYWHERE</h1>
-            </div>
-            <button class="guide-btn" onclick="toggleGuide()"><i class="fas fa-book-open"></i> GUIDE LINE</button>
-        </header>
-        <p class="subtitle">Download Anything. Anywhere. Anytime.</p>
-
-        <div class="input-section neon-border">
-            <div class="input-wrapper">
-                <i class="fas fa-link link-icon"></i>
-                <input type="text" id="video-url" placeholder="Paste your link here..." autofocus>
-            </div>
-            <button class="btn-paste" onclick="pasteLink()"><i class="fas fa-paste"></i> PASTE</button>
+        <h1>ΔI_TRAVEL_ΔNYWHERE</h1>
+        <p>DOWNLOAD ANYTHING. ANYWHERE. ANYTIME.</p>
+        <div class="input-section">
+            <input type="text" id="video-url" placeholder="Paste your link here..">
+            <button onclick="startDownload()">START</button>
         </div>
-
-        <h3 class="section-title">CHOOSE PLATFORM (ACTIVE MP4)</h3>
-        <div class="platforms-grid">
-            <div class="platform-card youtube active" onclick="selectPlatform('youtube')">
-                <i class="fab fa-youtube"></i><span>YOUTUBE</span><span class="format-badge">MP4</span>
-            </div>
-            <div class="platform-card facebook" onclick="selectPlatform('facebook')">
-                <i class="fab fa-facebook-f"></i><span>FACEBOOK</span><span class="format-badge">MP4</span>
-            </div>
-            <div class="platform-card tiktok" onclick="selectPlatform('tiktok')">
-                <i class="fab fa-tiktok"></i><span>TIKTOK</span><span class="format-badge">MP4</span>
-            </div>
-        </div>
-
-        <div class="action-row">
-            <div class="info-card neon-border small"><i class="fas fa-rocket"></i><div class="info-text"><strong>STORAGE</strong><span>Optimized MP4</span></div></div>
-            <div class="download-circle-container" onclick="startDownload()">
-                <div class="glow-ring"></div>
-                <div class="circle-content"><i class="fas fa-download animate-bounce"></i><span class="start-txt">START</span></div>
-            </div>
-            <div class="info-card neon-border small"><i class="fas fa-shield-alt"></i><div class="info-text"><strong>SECURE</strong><span>100% Local</span></div></div>
-        </div>
-
-        <!-- Dynamic Profile Card -->
-        <div class="travel-prompt-card neon-border" id="travel-profile-card">
-            <div class="travel-avatar-wrapper">
-                <img id="profile-display-img" 
-                     src="{{ url_for('static', filename='profile.jpg') }}?t={{ range(1, 9999) | random }}" 
-                     alt="Iqbal Ahmed" 
-                     class="travel-avatar" 
-                     style="cursor: pointer;" 
-                     onclick="checkPasswordToUpload()"
-                     onerror="this.src='https://images.unsplash.com/photo-1506744038136-46273834b3fb?w=150';">
-            </div>
-            <div class="travel-prompt-info">
-                <h4><i class="fas fa-compass"></i> WANDERLUST & AI CREATOR</h4>
-                <p class="prompt-contact-text">Contact: <span>jsi.iqbal@gmail.com</span></p>
-            </div>
-        </div>
-
-        <!-- Hidden Upload Form -->
-        <form id="profile-upload-form" action="/upload-profile" method="POST" enctype="multipart/form-data" style="display: none;">
-            <input type="password" id="hidden-password-field" name="profile_password">
-            <input type="file" id="profile-file-input" name="profile_jpg" accept="image/*" onchange="document.getElementById('profile-upload-form').submit();">
-        </form>
-
-        <footer class="app-footer-credits">
-            <div class="creator-tag">CREATED BY : <span>IQBAL AHMED</span></div>
-        </footer>
+        <div class="footer">CREATED BY : IQBAL AHMED</div>
     </div>
-
-    <script>
-    function checkPasswordToUpload() {
-        let password = prompt("প্রোফাইল পিকচার পরিবর্তন করতে সিক্রেট পাসওয়ার্ডটি দিন:");
-        if (password != null && password != "") {
-            document.getElementById('hidden-password-field').value = password;
-            document.getElementById('profile-file-input').click();
-        }
-    }
-    </script>
     <script src="{{ url_for('static', filename='script.js') }}"></script>
 </body>
 </html>
