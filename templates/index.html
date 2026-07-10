@@ -7,12 +7,16 @@
 <body>
     <div class="app-container">
         <h1>ΔI_TRAVEL_ΔNYWHERE</h1>
-        <p>DOWNLOAD ANYTHING. ANYWHERE. ANYTIME.</p>
-        <div class="input-section">
+        <div class="input-group">
             <input type="text" id="video-url" placeholder="Paste your link here..">
-            <button onclick="startDownload()">START</button>
+            <button onclick="pasteUrl()">PASTE</button>
         </div>
-        <div class="footer">CREATED BY : IQBAL AHMED</div>
+        <div class="platform-btns">
+            <button onclick="setPlatform('youtube')">YOUTUBE</button>
+            <button onclick="setPlatform('facebook')">FACEBOOK</button>
+            <button onclick="setPlatform('tiktok')">TIKTOK</button>
+        </div>
+        <button class="start-btn" onclick="startDownload()">START DOWNLOAD</button>
     </div>
     <script src="{{ url_for('static', filename='script.js') }}"></script>
 </body>

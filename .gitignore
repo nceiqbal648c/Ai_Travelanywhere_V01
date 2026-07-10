@@ -1,6 +1,2 @@
-
-AI_TravelAnywhere_256x256.png
 downloads/
-*.mkv
-*.mp4
-cookies/
+__pycache__/
