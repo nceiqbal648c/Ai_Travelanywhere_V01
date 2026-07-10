@@ -1,9 +1,9 @@
 body { background: #0b0e14; color: #00f2fe; font-family: Arial, sans-serif; padding: 20px; }
-.app-container { border: 2px solid #00f2fe; padding: 20px; border-radius: 10px; max-width: 500px; margin: 0 auto; }
-h1 { font-size: 22px; margin-bottom: 20px; text-align: center; }
+.app-container { border: 2px solid #00f2fe; padding: 20px; border-radius: 10px; max-width: 500px; margin: 0 auto; text-align: center; }
+h1 { font-size: 22px; margin-bottom: 20px; }
 .input-group { display: flex; gap: 5px; margin-bottom: 20px; }
 input { flex: 1; background: #1a1f26; border: 1px solid #00f2fe; color: white; padding: 10px; border-radius: 5px; }
-.platform-btns { display: flex; justify-content: center; gap: 10px; margin-bottom: 20px; }
 button { background: #1a1f26; border: 1px solid #00f2fe; color: #00f2fe; padding: 8px 15px; border-radius: 5px; cursor: pointer; }
 button:hover { background: #00f2fe; color: #0b0e14; }
-.start-btn { width: 100%; background: #ff4500; color: white; padding: 12px; border: none; border-radius: 5px; font-weight: bold; cursor: pointer; }
+.start-btn { width: 100%; background: #ff4500; color: white; padding: 12px; border: none; border-radius: 5px; font-weight: bold; cursor: pointer; margin-top: 10px; }
+
