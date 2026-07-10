@@ -2,22 +2,26 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ai_Travel_Anywhere</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
+
 <body>
     <div class="app-container">
         <h1>ΔI_TRAVEL_ΔNYWHERE</h1>
         <div class="input-group">
-            <input type="text" id="video-url" placeholder="Paste your link here..">
+            <input type="text" id="video-url" placeholder="Paste your link here...">
             <button onclick="pasteUrl()">PASTE</button>
         </div>
         <div class="platform-btns">
-            <button onclick="setPlatform('youtube')">YOUTUBE</button>
-            <button onclick="setPlatform('facebook')">FACEBOOK</button>
-            <button onclick="setPlatform('tiktok')">TIKTOK</button>
+            <button onclick="setPlatform('youtube')">YouTube</button>
+            <button onclick="setPlatform('facebook')">Facebook</button>
+            <button onclick="setPlatform('tiktok')">TikTok</button>
         </div>
-        <button class="start-btn" onclick="startDownload()">START DOWNLOAD</button>
+        <button class="start-btn" onclick="startProcess()">START</button>
     </div>
+    
     <script src="{{ url_for('static', filename='script.js') }}"></script>
 </body>
 </html>
