@@ -1,28 +1,49 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body { display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; background-color: #121212; font-family: sans-serif; }
+        .container { width: 90%; max-width: 400px; padding: 20px; background: #1e1e1e; border-radius: 15px; text-align: center; color: white; }
+        input, select, button { width: 100%; padding: 12px; margin: 8px 0; border-radius: 8px; border: none; box-sizing: border-box; }
+        button { background-color: #ff6600; color: white; font-weight: bold; cursor: pointer; }
+    </style>
 </head>
 <body>
-    <div class="card">
-        <h2>ΔI_TRAVEL_ΔNYWHERE</h2>
-        <input type="text" id="video-url" placeholder="Paste your link here...">
-        
-        <div class="config-box">
-            <label style="color:#d4a373; font-size: 12px;">CHOOSE PLATFORM</label>
-            <select id="format-select">
-                <option value="video">YouTube (MP4 1080p)</option>
-                <option value="facebook">Facebook Reel (MP4)</option>
-                <option value="tiktok">TikTok (MP4)</option>
-                <option value="audio">Audio Only (MP3)</option>
-            </select>
-        </div>
-
-        <button class="btn" onclick="startProcess()">START DOWNLOAD</button>
-        <div id="status"></div>
-        <p>Created by: Iqbal Ahmed</p>
+    <div class="container">
+        <h2>AI_TRAVEL_ANYWHERE</h2>
+        <input type="text" id="url" placeholder="Paste your link here...">
+        <button onclick="downloadVideo()">START DOWNLOAD</button>
     </div>
-    <script src="{{ url_for('static', filename='script.js') }}"></script>
+    <script>
+        async function downloadVideo() {
+            const url = document.getElementById('url').value;
+            if(!url) { alert("Please paste a link"); return; }
+            
+            alert("Downloading... Please wait.");
+            
+            try {
+                const response = await fetch('/download', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({url: url})
+                });
+                
+                if (response.ok) {
+                    const blob = await response.blob();
+                    const link = document.createElement('a');
+                    link.href = URL.createObjectURL(blob);
+                    link.download = "downloaded_video.mp4";
+                    link.click();
+                    alert("Download success!");
+                } else {
+                    const errorData = await response.json();
+                    alert("Error: " + errorData.message);
+                }
+            } catch (err) {
+                alert("Connection error occurred.");
+            }
+        }
+    </script>
 </body>
 </html>

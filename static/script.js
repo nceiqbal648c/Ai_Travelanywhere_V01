@@ -1,29 +1,32 @@
-async function startProcess() {
-    const url = document.getElementById('video-url').value;
-    const format = document.getElementById('format-select').value;
-    const status = document.getElementById('status');
-
-    if(!url) {
-        alert("Link dao boss!");
-        return;
-    }
-    
-    status.innerText = "Downloading... Please wait";
-    
-    try {
-        const res = await fetch('/download', {
-            method: 'POST',
-            headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify({url: url, format: format})
-        });
-        
-        const data = await res.json();
-        if (res.ok) {
-            status.innerText = "Finished: " + data.message;
-        } else {
-            status.innerText = "Error: " + data.error;
-        }
-    } catch (error) {
-        status.innerText = "Connection Error!";
-    }
+function pasteLink() {
+    navigator.clipboard.readText().then(text => document.getElementById('url').value = text);
 }
+
+function startDownload() {
+    const url = document.getElementById('url').value;
+    const loader = document.getElementById('loader');
+    const status = document.getElementById('status');
+    
+    if(!url) return alert("Paste a link first!");
+    
+    loader.style.display = "block";
+    status.innerText = "Downloading...";
+    
+    fetch('/download', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({url: url})
+    })
+    .then(res => res.json())
+    .then(data => {
+        loader.style.display = "none";
+        status.innerText = "Finished";
+        alert(data.message);
+    })
+    .catch(err => {
+        loader.style.display = "none";
+        status.innerText = "Error!";
+        alert("Download failed.");
+    });
+}
+

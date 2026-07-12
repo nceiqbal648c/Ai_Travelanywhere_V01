@@ -1,7 +1,8 @@
-body { background: #121212; color: #e0e0e0; font-family: 'Segoe UI', sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
-.card { background: #1f1b16; padding: 30px; border-radius: 25px; width: 350px; box-shadow: 0 0 20px rgba(139, 69, 19, 0.5); border: 1px solid #4a3728; text-align: center; }
-h2 { color: #d4a373; margin-bottom: 25px; text-shadow: 0 0 10px rgba(212, 163, 115, 0.5); }
-input { width: 100%; padding: 15px; border-radius: 12px; border: 1px solid #4a3728; background: #2a241d; color: white; box-sizing: border-box; margin-bottom: 20px; }
-.btn { width: 100%; padding: 15px; border-radius: 12px; border: none; background: linear-gradient(90deg, #8b4513, #d4a373); color: white; font-weight: bold; cursor: pointer; transition: 0.3s; }
-.btn:hover { box-shadow: 0 0 15px #d4a373; }
-#status { margin-top: 20px; font-size: 14px; color: #d4a373; }
+body { background: #0d0d0d; color: #ff8c42; font-family: sans-serif; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; }
+.container { width: 90%; max-width: 400px; padding: 20px; border: 1px solid #444; border-radius: 20px; text-align: center; background: rgba(20, 20, 20, 0.8); }
+.input-group { display: flex; gap: 5px; margin: 15px 0; }
+input { flex: 1; padding: 10px; border-radius: 5px; border: 1px solid #ff8c42; background: #000; color: #fff; }
+.paste-btn { padding: 10px; cursor: pointer; border: 1px solid #ff8c42; background: transparent; color: #ff8c42; }
+.download-btn { width: 100%; padding: 15px; margin: 20px 0; background: #444; color: #ccc; border: none; border-radius: 10px; cursor: pointer; }
+.circle { width: 100px; height: 100px; border: 5px solid #333; border-top: 5px solid #ff8c42; border-radius: 50%; margin: 20px auto; animation: spin 2s linear infinite; display: none; }
+@keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
