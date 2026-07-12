@@ -2,17 +2,27 @@
 <html>
 <head>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
 <body>
-    <div class="app-container">
-        <h1>ΔI_TRAVEL_ΔNYWHERE</h1>
-        <input type="text" id="video-url" placeholder="Paste link here">
-        <button onclick="pasteUrl()">PASTE</button>
-        <button class="start-btn" onclick="startProcess()">START</button>
+    <div class="card">
+        <h2>ΔI_TRAVEL_ΔNYWHERE</h2>
+        <input type="text" id="video-url" placeholder="Paste your link here...">
         
-        <p style="color: #666; font-size: 12px; margin-top: 20px;">Created by: Iqbal Ahmed</p>
+        <div class="config-box">
+            <label style="color:#d4a373; font-size: 12px;">CHOOSE PLATFORM</label>
+            <select id="format-select">
+                <option value="video">YouTube (MP4 1080p)</option>
+                <option value="facebook">Facebook Reel (MP4)</option>
+                <option value="tiktok">TikTok (MP4)</option>
+                <option value="audio">Audio Only (MP3)</option>
+            </select>
+        </div>
+
+        <button class="btn" onclick="startProcess()">START DOWNLOAD</button>
+        <div id="status"></div>
+        <p>Created by: Iqbal Ahmed</p>
     </div>
     <script src="{{ url_for('static', filename='script.js') }}"></script>
 </body>
 </html>
-
