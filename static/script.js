@@ -1,29 +1,29 @@
-async function pasteUrl() {
-    const text = await navigator.clipboard.readText();
-    document.getElementById('video-url').value = text;
-}
-
 async function startProcess() {
     const url = document.getElementById('video-url').value;
-    if (!url) {
-        alert("আগে লিঙ্ক পেস্ট করুন!");
+    const format = document.getElementById('format-select').value;
+    const status = document.getElementById('status');
+
+    if(!url) {
+        alert("Link dao boss!");
         return;
     }
-
-    const startBtn = document.querySelector('.start-btn');
-    startBtn.innerText = "ডাউনলোড হচ্ছে...";
-    startBtn.disabled = true;
-
-    const res = await fetch('/download', {
-        method: 'POST',
-        headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify({url: url})
-    });
     
-    const data = await res.json();
+    status.innerText = "Downloading... Please wait";
     
-    startBtn.innerText = "START";
-    startBtn.disabled = false;
-    
-    alert(data.message || data.error);
+    try {
+        const res = await fetch('/download', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({url: url, format: format})
+        });
+        
+        const data = await res.json();
+        if (res.ok) {
+            status.innerText = "Finished: " + data.message;
+        } else {
+            status.innerText = "Error: " + data.error;
+        }
+    } catch (error) {
+        status.innerText = "Connection Error!";
+    }
 }
