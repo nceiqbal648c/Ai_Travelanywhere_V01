@@ -1,48 +1,79 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+    <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Iqbal_VideoPlayer & Downloader </title>
     <style>
-        body { display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; background-color: #121212; font-family: sans-serif; }
-        .container { width: 90%; max-width: 400px; padding: 20px; background: #1e1e1e; border-radius: 15px; text-align: center; color: white; }
-        input, select, button { width: 100%; padding: 12px; margin: 8px 0; border-radius: 8px; border: none; box-sizing: border-box; }
-        button { background-color: #ff6600; color: white; font-weight: bold; cursor: pointer; }
+        body { 
+            background: radial-gradient(circle at center, #0a192f, #020c1b); 
+            min-height: 100vh; display: flex; align-items: center; justify-content: center;
+            font-family: 'Segoe UI', sans-serif; color: #64ffda; margin: 0;
+        }
+        .card { 
+            background: rgba(16, 30, 50, 0.7); backdrop-filter: blur(20px);
+            padding: 30px; border-radius: 25px; box-shadow: 0 0 25px rgba(100, 255, 218, 0.2);
+            width: 85%; max-width: 400px; text-align: center; border: 1px solid rgba(100, 255, 218, 0.3);
+        }
+        h2 { margin: 0 0 5px 0; color: #fff; letter-spacing: 2px; }
+        .creator { font-size: 12px; color: #8892b0; margin-bottom: 25px; text-transform: uppercase; }
+        input { 
+            width: 100%; padding: 15px; border-radius: 12px; border: 1px solid #64ffda; 
+            background: transparent; color: white; box-sizing: border-box; margin-bottom: 15px;
+        }
+        .btn-group { display: flex; gap: 10px; }
+        .btn { 
+            flex: 1; padding: 12px; border: none; border-radius: 12px; 
+            font-weight: bold; cursor: pointer; transition: 0.3s;
+        }
+        .btn-paste { background: #172a45; color: #64ffda; border: 1px solid #64ffda; }
+        .btn-get { background: #64ffda; color: #0a192f; }
+        #videoPlayer { width: 100%; border-radius: 15px; margin-top: 25px; display: none; border: 1px solid #64ffda; }
+        #downloadBtn { 
+            display: none; margin-top: 20px; padding: 15px; background: transparent; 
+            color: #64ffda; text-decoration: none; border: 1px solid #64ffda; 
+            border-radius: 12px; font-weight: bold;
+        }
     </style>
 </head>
 <body>
-    <div class="container">
-        <h2>AI_TRAVEL_ANYWHERE</h2>
-        <input type="text" id="url" placeholder="Paste your link here...">
-        <button onclick="downloadVideo()">START DOWNLOAD</button>
+    <div class="card">
+        <h2>Iqbal_VideoPlayer & Downloader </h2>
+        <div class="creator">Created by : Iqbal Ahmed</div>
+        
+        <input type="text" id="urlInput" placeholder="Paste video link here...">
+        
+        <div class="btn-group">
+            <button class="btn btn-paste" onclick="pasteLink()">Paste</button>
+            <button class="btn btn-get" onclick="getInfo()">Get Info</button>
+        </div>
+        <video id="videoPlayer" controls></video>
+        <a id="downloadBtn" href="#" download>Download Now</a>
     </div>
     <script>
-        async function downloadVideo() {
-            const url = document.getElementById('url').value;
-            if(!url) { alert("Please paste a link"); return; }
-            
-            alert("Downloading... Please wait.");
-            
-            try {
-                const response = await fetch('/download', {
-                    method: 'POST',
-                    headers: {'Content-Type': 'application/json'},
-                    body: JSON.stringify({url: url})
-                });
-                
-                if (response.ok) {
-                    const blob = await response.blob();
-                    const link = document.createElement('a');
-                    link.href = URL.createObjectURL(blob);
-                    link.download = "downloaded_video.mp4";
-                    link.click();
-                    alert("Download success!");
-                } else {
-                    const errorData = await response.json();
-                    alert("Error: " + errorData.message);
-                }
-            } catch (err) {
-                alert("Connection error occurred.");
-            }
+        function pasteLink() {
+            navigator.clipboard.readText().then(text => {
+                document.getElementById('urlInput').value = text;
+            });
+        }
+        function getInfo() {
+            let url = document.getElementById('urlInput').value;
+            fetch('/get_info', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({url: url})
+            })
+            .then(res => res.json())
+            .then(data => {
+                const video = document.getElementById('videoPlayer');
+                video.src = data.download_url;
+                video.style.display = 'block';
+                video.play();
+                const btn = document.getElementById('downloadBtn');
+                btn.href = data.download_url;
+                btn.setAttribute('download', 'video.mp4');
+                btn.style.display = 'block';
+            });
         }
     </script>
 </body>

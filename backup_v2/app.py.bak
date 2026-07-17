@@ -1,0 +1,36 @@
+from flask import Flask, render_template, request, jsonify
+import yt_dlp
+
+app = Flask(__name__)
+
+@app.route('/')
+def index():
+    return render_template('index.html')
+
+@app.route('/get_video_info', methods=['POST'])
+def get_video_info():
+    url = request.json.get('url')
+    # সব প্ল্যাটফর্মের জন্য ইউনিভার্সাল কনফিগারেশন
+    ydl_opts = {
+        'quiet': True,
+        'no_warnings': True,
+        'ignoreerrors': True,
+        'nocheckcertificate': True,
+        'skip_download': True,
+        'socket_timeout': 30
+    }
+    
+    try:
+        with yt_dlp.YoutubeDL(ydl_opts) as ydl:
+            info = ydl.extract_info(url, download=False)
+            return jsonify({
+                'title': info.get('title', 'Video Found'),
+                'thumbnail': info.get('thumbnail', ''),
+                'duration': info.get('duration_string', 'N/A')
+            })
+    except Exception as e:
+        return jsonify({'error': str(e)})
+
+if __name__ == '__main__':
+    app.run(debug=True, port=5000)
+
