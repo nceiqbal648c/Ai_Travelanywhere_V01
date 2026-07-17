@@ -129,6 +129,19 @@ def download_video():
         return jsonify({'error': 'Unexpected error', 'detail': str(e)}), 500
 
 
+# compatibility endpoints for older frontend paths
+@app.route('/get_info', methods=['POST'])
+def get_info_compat():
+    """Compatibility wrapper for older frontend using /get_info"""
+    return get_video_info()
+
+
+@app.route('/download', methods=['POST'])
+def download_compat():
+    """Compatibility wrapper for older frontend using /download"""
+    return download_video()
+
+
 if __name__ == '__main__':
     # Use PORT env var when available (useful for platforms like Heroku)
     port = int(os.environ.get('PORT', 5000))
