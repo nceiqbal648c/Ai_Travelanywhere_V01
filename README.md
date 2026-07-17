@@ -1,27 +1,39 @@
-# Ai_Travel_Anywhere 💝
+# Ai_Travelanywhere_V01
 
-বিরক্তিকর বিজ্ঞাপনমুক্ত পরিবেশে প্রকৃতির ভিডিও দেখার এবং ভ্রমণের অভিজ্ঞতা সঞ্চয়ের একটি ব্যক্তিগত প্রজেক্ট। 
+This repository contains a small Flask app that uses yt-dlp to fetch video metadata and optionally download media.
 
-## উদ্দেশ্য (Purpose)
-প্রকৃতি থেকে আমাদের অনেক কিছু শেখার আছে। আমরা যদি প্রকৃতিকে ১% দেই, প্রকৃতি আমাদের ১০ গুণ ফিরিয়ে দেয়। তাই প্রকৃতির এই অবারিত সৌন্দর্যকে বিজ্ঞাপনমুক্তভাবে উপভোগ করার উদ্দেশ্যেই এই অ্যাপটি তৈরি করা হয়েছে। 
+Quick start (Termux / Linux / macOS):
 
-## ফিচারস (Features)
-- ফেসবুক, ইউটিউব এবং টিকটক থেকে সরাসরি ভিডিও ডাউনলোড।
-- বিরক্তিকর বিজ্ঞাপনবিহীন ইন্টারফেস।
-- ক্লিন এবং রেসপন্সিভ ডিজাইন।
+1. Clone and enter the repo
 
-## প্রযুক্তি (Tech Stack)
-- Python
-- yt-dlp
-- Flask (Web Interface)
-
-## ইন্সটলেশন (Installation)
-১. রিপোজিটরি ক্লোন করুন:
    git clone https://github.com/nceiqbal648c/Ai_Travelanywhere_V01.git
-২. ডিপেনডেন্সি ইনস্টল করুন:
+   cd Ai_Travelanywhere_V01
+
+2. Create and activate a virtual environment
+
+   python3 -m venv venv
+   source venv/bin/activate
+
+3. Install dependencies
+
+   pip install --upgrade pip
    pip install -r requirements.txt
-৩. অ্যাপ রান করুন:
+
+4. Run the app
+
    python app.py
 
----
-*প্রকৃতি আমাদের সম্পদ। আসুন আমরা সবাই প্রকৃতিকে রক্ষা করি।*
+API endpoints
+
+- POST /api/video-info
+  - JSON body: {"url": "<video-url>"}
+  - Returns video metadata as JSON.
+
+- POST /api/download
+  - JSON body: {"url": "<video-url>", "format": "bestaudio", "filename": "optional-name-without-ext"}
+  - Downloads file into downloads/ and returns the saved filename.
+
+Notes
+
+- Ensure ffmpeg is installed if you plan to extract or convert audio/video formats.
+- The app writes to a local downloads/ directory; make sure the process has write permissions.
